@@ -5,6 +5,7 @@ struct NumberGame: View {
     @State private var currentNumber = 1
     @State private var isAnimating = false
     @State private var speechSynthesizer = AVSpeechSynthesizer()
+    @Binding var selectedGame: GameType?
     
     let maxNumber = 1000
     
@@ -16,6 +17,22 @@ struct NumberGame: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 30) {
+                HStack {
+                    Button(action: {
+                        selectedGame = nil
+                    }) {
+                        Image(systemName: "house.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue.opacity(0.8))
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
                 Text("すうじをかぞえよう！")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
@@ -129,5 +146,5 @@ struct NumberGame: View {
 }
 
 #Preview {
-    NumberGame()
+    NumberGame(selectedGame: .constant(nil))
 } 

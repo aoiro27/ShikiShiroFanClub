@@ -8,6 +8,7 @@ struct ColorPuzzleGame: View {
     @State private var isAnimating = false
     @State private var score = 0
     @Environment(\.dismiss) private var dismiss
+    @Binding var selectedGame: GameType?
     
     let questions = [
         (question: "きいろをえらんでね", answer: "きいろ"),
@@ -33,6 +34,22 @@ struct ColorPuzzleGame: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 30) {
+                HStack {
+                    Button(action: {
+                        selectedGame = nil
+                    }) {
+                        Image(systemName: "house.fill")
+                            .font(.system(size: 32))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue.opacity(0.8))
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
                 Text("いろクイズ")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
@@ -100,7 +117,7 @@ struct ColorPuzzleGame: View {
                     score: score,
                     totalQuestions: questions.count,
                     onRestart: restartGame,
-                    onFinish: { dismiss() }
+                    onFinish: { selectedGame = nil }
                 )
                 .transition(.scale)
             }
@@ -144,5 +161,5 @@ struct ColorPuzzleGame: View {
 }
 
 #Preview {
-    ColorPuzzleGame()
+    ColorPuzzleGame(selectedGame: .constant(nil))
 } 

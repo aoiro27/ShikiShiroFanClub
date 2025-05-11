@@ -3,109 +3,136 @@ import AVFoundation
 
 struct AnimalSoundGame: View {
     @State private var currentAnimal = 0
-    @State private var showingAnswer = false
-    @State private var audioPlayer: AVAudioPlayer?
     @State private var isPlaying = false
+    @State private var audioPlayer: AVAudioPlayer?
+    @Binding var selectedGame: GameType?
     
     let animals = [
-        (name: "いぬ", sound: "dog", image: "dog.fill"),
-        (name: "ねこ", sound: "cat", image: "cat.fill"),
-        (name: "うし", sound: "cow", image: "cow.fill"),
-        (name: "ぶた", sound: "pig", image: "pig.fill"),
-        (name: "ひつじ", sound: "sheep", image: "sheep.fill")
+        ("いぬ", "dog"),
+        ("ねこ", "cat"),
+        ("うし", "cow"),
+        ("ぶた", "pig"),
+        ("ひつじ", "sheep")
     ]
     
     var body: some View {
         ZStack {
-            Image("background")
+            Image("background2")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
             
-            VStack(spacing: 30) {
-                Text("なきごえをきいてみよう！")
-                    .font(.system(size: 32, weight: .bold))
+            VStack(spacing: 40) {
+                HStack {
+                    Button(action: {
+                        selectedGame = nil
+                    }) {
+                        Image(systemName: "house.fill")
+                            .font(.system(size: 32))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue.opacity(0.8))
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
+                Text("どうぶつのなきごえ")
+                    .font(.system(size: 40, weight: .bold))
                     .foregroundColor(.white)
-                    .shadow(radius: 2)
-                    .padding(.top, 20)
+                    .shadow(radius: 3)
                 
-                Spacer()
+                Image(animals[currentAnimal].1)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300, height: 300)
+                    .shadow(radius: 10)
                 
-                if showingAnswer {
-                    Image(systemName: animals[currentAnimal].image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 150, height: 150)
-                        .foregroundColor(.orange)
-                        .transition(.scale)
-                        .shadow(radius: 5)
-                }
+                Text(animals[currentAnimal].0)
+                    .font(.system(size: 48, weight: .bold))
+                    .foregroundColor(.white)
+                    .shadow(radius: 3)
                 
-                Button(action: {
-                    withAnimation {
-                        playSound()
-                    }
-                }) {
-                    Image(systemName: isPlaying ? "speaker.wave.2.fill" : "speaker.wave.2")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.white)
-                        .scaleEffect(isPlaying ? 1.2 : 1.0)
-                        .shadow(radius: 5)
-                }
-                
-                if showingAnswer {
-                    Text(animals[currentAnimal].name)
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.white)
-                        .transition(.scale)
-                        .shadow(radius: 2)
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    withAnimation {
-                        if showingAnswer {
-                            currentAnimal = (currentAnimal + 1) % animals.count
-                            showingAnswer = false
-                        } else {
-                            showingAnswer = true
+                HStack(spacing: 40) {
+                    Button(action: {
+                        if currentAnimal > 0 {
+                            currentAnimal -= 1
                         }
+                    }) {
+                        Image(systemName: "arrow.left.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.white)
+                            .background(Color.blue.opacity(0.8))
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
                     }
-                }) {
-                    Text(showingAnswer ? "つぎへ" : "こたえをみる")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.white)
-                        .frame(width: 200, height: 60)
-                        .background(showingAnswer ? Color.green : Color.blue)
-                        .cornerRadius(15)
-                        .shadow(radius: 5)
+                    
+                    Button(action: {
+                        playSound()
+                    }) {
+                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.white)
+                            .background(Color.green.opacity(0.8))
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
+                    
+                    Button(action: {
+                        if currentAnimal < animals.count - 1 {
+                            currentAnimal += 1
+                        }
+                    }) {
+                        Image(systemName: "arrow.right.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.white)
+                            .background(Color.blue.opacity(0.8))
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
                 }
-                .padding(.bottom, 30)
+                .padding(.top, 20)
             }
             .padding()
         }
     }
     
-    func playSound() {
-        guard let soundURL = Bundle.main.url(forResource: animals[currentAnimal].sound, withExtension: "mp3") else { return }
+    private func playSound() {
+        if isPlaying {
+            audioPlayer?.stop()
+            isPlaying = false
+            return
+        }
+        
+        guard let url = Bundle.main.url(forResource: animals[currentAnimal].1, withExtension: "mp3") else {
+            print("音声ファイルが見つかりません")
+            return
+        }
         
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.delegate = nil
             audioPlayer?.play()
             isPlaying = true
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // 音声再生が終了したら再生状態をリセット
+            DispatchQueue.main.asyncAfter(deadline: .now() + audioPlayer!.duration) {
                 isPlaying = false
             }
         } catch {
-            print("音声の再生に失敗しました: \(error)")
+            print("音声の再生に失敗しました: \(error.localizedDescription)")
         }
     }
 }
 
 #Preview {
-    AnimalSoundGame()
+    AnimalSoundGame(selectedGame: .constant(nil))
 }

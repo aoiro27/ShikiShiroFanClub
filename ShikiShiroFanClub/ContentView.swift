@@ -60,14 +60,24 @@ struct ContentView: View {
             }
         }
         .onAppear {
+            setupAudioSession()
             setupAudio()
         }
         .onChange(of: selectedGame) { newValue in
             if newValue != nil {
                 audioPlayer?.stop()
             } else {
-                audioPlayer?.play()
+                setupAudio()
             }
+        }
+    }
+    
+    private func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("オーディオセッションの設定に失敗しました: \(error.localizedDescription)")
         }
     }
     
@@ -79,6 +89,7 @@ struct ContentView: View {
         
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.prepareToPlay()
             audioPlayer?.numberOfLoops = -1  // 無限ループ
             audioPlayer?.volume = 0.5  // 音量を50%に設定
             audioPlayer?.play()

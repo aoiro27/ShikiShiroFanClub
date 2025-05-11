@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 struct ColorPuzzleGame: View {
     @State private var currentQuestion = 0
@@ -7,6 +8,7 @@ struct ColorPuzzleGame: View {
     @State private var isCorrect = false
     @State private var isAnimating = false
     @State private var score = 0
+    @State private var bgmPlayer: AVAudioPlayer?
     @Environment(\.dismiss) private var dismiss
     @Binding var selectedGame: GameType?
     
@@ -122,8 +124,34 @@ struct ColorPuzzleGame: View {
                 .transition(.scale)
             }
         }
+        .onAppear {
+            setupBGM()
+        }
+        .onDisappear {
+            bgmPlayer?.stop()
+        }
         .animation(.spring(), value: showingResult)
         .animation(.spring(), value: showingComplete)
+    }
+    
+    private func setupBGM() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            guard let url = Bundle.main.url(forResource: "bgm1", withExtension: "mp3") else {
+                print("BGMファイルが見つかりません")
+                return
+            }
+            
+            bgmPlayer = try AVAudioPlayer(contentsOf: url)
+            bgmPlayer?.prepareToPlay()
+            bgmPlayer?.numberOfLoops = -1  // 無限ループ
+            bgmPlayer?.volume = 0.3  // 音量を30%に設定
+            bgmPlayer?.play()
+        } catch {
+            print("BGMの再生に失敗しました: \(error.localizedDescription)")
+        }
     }
     
     private func checkAnswer(selectedColor: String) {

@@ -5,6 +5,7 @@ struct NumberGame: View {
     @State private var currentNumber = 1
     @State private var isAnimating = false
     @State private var speechSynthesizer = AVSpeechSynthesizer()
+    @State private var bgmPlayer: AVAudioPlayer?
     @Binding var selectedGame: GameType?
     
     let maxNumber = 1000
@@ -22,7 +23,7 @@ struct NumberGame: View {
                         selectedGame = nil
                     }) {
                         Image(systemName: "house.fill")
-                            .font(.system(size: 24))
+                            .font(.system(size: 32))
                             .foregroundColor(.white)
                             .padding()
                             .background(Color.blue.opacity(0.8))
@@ -127,6 +128,32 @@ struct NumberGame: View {
             }
             .padding()
         }
+        .onAppear {
+            setupBGM()
+        }
+        .onDisappear {
+            bgmPlayer?.stop()
+        }
+    }
+    
+    private func setupBGM() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            guard let url = Bundle.main.url(forResource: "bgm1", withExtension: "mp3") else {
+                print("BGMファイルが見つかりません")
+                return
+            }
+            
+            bgmPlayer = try AVAudioPlayer(contentsOf: url)
+            bgmPlayer?.prepareToPlay()
+            bgmPlayer?.numberOfLoops = -1  // 無限ループ
+            bgmPlayer?.volume = 0.3  // 音量を30%に設定
+            bgmPlayer?.play()
+        } catch {
+            print("BGMの再生に失敗しました: \(error.localizedDescription)")
+        }
     }
     
     private func animate() {
@@ -145,6 +172,8 @@ struct NumberGame: View {
     }
 }
 
-#Preview {
-    NumberGame(selectedGame: .constant(nil))
+struct NumberGame_Previews: PreviewProvider {
+    static var previews: some View {
+        NumberGame(selectedGame: .constant(nil))
+    }
 } 

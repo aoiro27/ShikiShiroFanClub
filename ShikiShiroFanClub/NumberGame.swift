@@ -6,7 +6,7 @@ struct NumberGame: View {
     @State private var isAnimating = false
     @State private var speechSynthesizer = AVSpeechSynthesizer()
     
-    let maxNumber = 5
+    let maxNumber = 1000
     
     var body: some View {
         ZStack {
@@ -23,7 +23,7 @@ struct NumberGame: View {
                     .padding(.top, 20)
                 
                 Text("\(currentNumber)")
-                    .font(.system(size: 120, weight: .bold))
+                    .font(.system(size: 160, weight: .bold))
                     .foregroundColor(.white)
                     .shadow(radius: 3)
                     .scaleEffect(isAnimating ? 1.2 : 1.0)
@@ -32,8 +32,34 @@ struct NumberGame: View {
                         speakNumber()
                     }
                 
-                HStack(spacing: 20) {
-                    ForEach(1...currentNumber, id: \.self) { _ in
+                HStack(spacing: 15) {
+                    if currentNumber >= 100 {
+                        ForEach(0..<(currentNumber / 100), id: \.self) { _ in
+                            Image(systemName: "star.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 60, height: 60)
+                                .foregroundColor(.blue)
+                                .rotationEffect(.degrees(isAnimating ? 360 : 0))
+                                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+                                .shadow(radius: 3)
+                        }
+                    }
+                    
+                    if currentNumber >= 10 {
+                        ForEach(0..<((currentNumber % 100) / 10), id: \.self) { _ in
+                            Image(systemName: "star.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(.green)
+                                .rotationEffect(.degrees(isAnimating ? 360 : 0))
+                                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+                                .shadow(radius: 3)
+                        }
+                    }
+                    
+                    ForEach(0..<(currentNumber % 10), id: \.self) { _ in
                         Image(systemName: "star.fill")
                             .resizable()
                             .scaledToFit()
@@ -57,7 +83,9 @@ struct NumberGame: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 80, height: 80)
-                            .foregroundColor(.red)
+                            .foregroundColor(.white)
+                            .background(Color.red.opacity(0.8))
+                            .clipShape(Circle())
                             .shadow(radius: 5)
                     }
                     
@@ -72,7 +100,9 @@ struct NumberGame: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 80, height: 80)
-                            .foregroundColor(.green)
+                            .foregroundColor(.white)
+                            .background(Color.green.opacity(0.8))
+                            .clipShape(Circle())
                             .shadow(radius: 5)
                     }
                 }

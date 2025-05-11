@@ -160,6 +160,8 @@ struct ColorPuzzleGame: View {
     }
 }
 
-#Preview {
-    ColorPuzzleGame(selectedGame: .constant(nil))
+struct ColorPuzzleGame_Previews: PreviewProvider {
+    static var previews: some View {
+        ColorPuzzleGame(selectedGame: .constant(nil))
+    }
 } 

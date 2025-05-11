@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		896F8E112DD112E800A641D5 /* opening.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E102DD112E800A641D5 /* opening.mp3 */; };
+		896F8E132DD118CF00A641D5 /* bgm1.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E122DD118CF00A641D5 /* bgm1.ogg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		896F8DAA2DD1050700A641D5 /* ShikiShiroFanClubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShikiShiroFanClubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		896F8DB42DD1050700A641D5 /* ShikiShiroFanClubUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShikiShiroFanClubUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		896F8E102DD112E800A641D5 /* opening.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = opening.mp3; sourceTree = "<group>"; };
+		896F8E122DD118CF00A641D5 /* bgm1.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bgm1.ogg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -84,6 +86,7 @@
 				896F8DAD2DD1050700A641D5 /* ShikiShiroFanClubTests */,
 				896F8DB72DD1050700A641D5 /* ShikiShiroFanClubUITests */,
 				896F8E102DD112E800A641D5 /* opening.mp3 */,
+				896F8E122DD118CF00A641D5 /* bgm1.ogg */,
 				896F8D9C2DD1050600A641D5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				896F8E112DD112E800A641D5 /* opening.mp3 in Resources */,
+				896F8E132DD118CF00A641D5 /* bgm1.ogg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

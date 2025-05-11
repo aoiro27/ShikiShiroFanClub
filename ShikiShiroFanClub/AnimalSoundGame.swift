@@ -133,6 +133,8 @@ struct AnimalSoundGame: View {
     }
 }
 
-#Preview {
-    AnimalSoundGame(selectedGame: .constant(nil))
+struct AnimalSoundGame_Previews: PreviewProvider {
+    static var previews: some View {
+        AnimalSoundGame(selectedGame: .constant(nil))
+    }
 }

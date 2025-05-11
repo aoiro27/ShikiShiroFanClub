@@ -1,8 +1,10 @@
 import SwiftUI
+import AVFoundation
 
 struct NumberGame: View {
     @State private var currentNumber = 1
     @State private var isAnimating = false
+    @State private var speechSynthesizer = AVSpeechSynthesizer()
     
     let maxNumber = 5
     
@@ -26,6 +28,9 @@ struct NumberGame: View {
                     .shadow(radius: 3)
                     .scaleEffect(isAnimating ? 1.2 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+                    .onTapGesture {
+                        speakNumber()
+                    }
                 
                 HStack(spacing: 20) {
                     ForEach(1...currentNumber, id: \.self) { _ in
@@ -45,6 +50,7 @@ struct NumberGame: View {
                         if currentNumber > 1 {
                             currentNumber -= 1
                             animate()
+                            speakNumber()
                         }
                     }) {
                         Image(systemName: "minus.circle.fill")
@@ -59,6 +65,7 @@ struct NumberGame: View {
                         if currentNumber < maxNumber {
                             currentNumber += 1
                             animate()
+                            speakNumber()
                         }
                     }) {
                         Image(systemName: "plus.circle.fill")
@@ -80,6 +87,14 @@ struct NumberGame: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             isAnimating = false
         }
+    }
+    
+    private func speakNumber() {
+        let utterance = AVSpeechUtterance(string: "\(currentNumber)")
+        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        utterance.rate = 0.5  // 話す速度を少し遅く
+        utterance.pitchMultiplier = 1.2  // 声の高さを少し上げる
+        speechSynthesizer.speak(utterance)
     }
 }
 

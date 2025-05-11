@@ -7,60 +7,72 @@ struct NumberGame: View {
     let maxNumber = 5
     
     var body: some View {
-        VStack(spacing: 30) {
-            Text("すうじをかぞえよう！")
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(.blue)
-                .padding(.top, 20)
+        ZStack {
+            Image("background2")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
             
-            Text("\(currentNumber)")
-                .font(.system(size: 120, weight: .bold))
-                .foregroundColor(.blue)
-                .scaleEffect(isAnimating ? 1.2 : 1.0)
-                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
-            
-            HStack(spacing: 20) {
-                ForEach(1...currentNumber, id: \.self) { _ in
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(.yellow)
-                        .rotationEffect(.degrees(isAnimating ? 360 : 0))
-                        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
-                }
-            }
-            
-            HStack(spacing: 40) {
-                Button(action: {
-                    if currentNumber > 1 {
-                        currentNumber -= 1
-                        animate()
+            VStack(spacing: 30) {
+                Text("すうじをかぞえよう！")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.white)
+                    .shadow(radius: 2)
+                    .padding(.top, 20)
+                
+                Text("\(currentNumber)")
+                    .font(.system(size: 120, weight: .bold))
+                    .foregroundColor(.white)
+                    .shadow(radius: 3)
+                    .scaleEffect(isAnimating ? 1.2 : 1.0)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+                
+                HStack(spacing: 20) {
+                    ForEach(1...currentNumber, id: \.self) { _ in
+                        Image(systemName: "star.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .foregroundColor(.yellow)
+                            .rotationEffect(.degrees(isAnimating ? 360 : 0))
+                            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+                            .shadow(radius: 3)
                     }
-                }) {
-                    Image(systemName: "minus.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.red)
                 }
                 
-                Button(action: {
-                    if currentNumber < maxNumber {
-                        currentNumber += 1
-                        animate()
+                HStack(spacing: 40) {
+                    Button(action: {
+                        if currentNumber > 1 {
+                            currentNumber -= 1
+                            animate()
+                        }
+                    }) {
+                        Image(systemName: "minus.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.red)
+                            .shadow(radius: 5)
                     }
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.green)
+                    
+                    Button(action: {
+                        if currentNumber < maxNumber {
+                            currentNumber += 1
+                            animate()
+                        }
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.green)
+                            .shadow(radius: 5)
+                    }
                 }
+                .padding(.top, 20)
             }
-            .padding(.top, 20)
+            .padding()
         }
-        .padding()
     }
     
     private func animate() {

@@ -1,4 +1,3 @@
- 
 import SwiftUI
 import AVFoundation
 
@@ -17,65 +16,77 @@ struct AnimalSoundGame: View {
     ]
     
     var body: some View {
-        VStack(spacing: 30) {
-            Text("なきごえをきいてみよう！")
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(.blue)
-                .padding(.top, 20)
+        ZStack {
+            Image("background")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
             
-            Spacer()
-            
-            if showingAnswer {
-                Image(systemName: animals[currentAnimal].image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 150, height: 150)
-                    .foregroundColor(.orange)
-                    .transition(.scale)
-            }
-            
-            Button(action: {
-                withAnimation {
-                    playSound()
-                }
-            }) {
-                Image(systemName: isPlaying ? "speaker.wave.2.fill" : "speaker.wave.2")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.blue)
-                    .scaleEffect(isPlaying ? 1.2 : 1.0)
-            }
-            
-            if showingAnswer {
-                Text(animals[currentAnimal].name)
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.green)
-                    .transition(.scale)
-            }
-            
-            Spacer()
-            
-            Button(action: {
-                withAnimation {
-                    if showingAnswer {
-                        currentAnimal = (currentAnimal + 1) % animals.count
-                        showingAnswer = false
-                    } else {
-                        showingAnswer = true
-                    }
-                }
-            }) {
-                Text(showingAnswer ? "つぎへ" : "こたえをみる")
-                    .font(.system(size: 24, weight: .bold))
+            VStack(spacing: 30) {
+                Text("なきごえをきいてみよう！")
+                    .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
-                    .frame(width: 200, height: 60)
-                    .background(showingAnswer ? Color.green : Color.blue)
-                    .cornerRadius(15)
+                    .shadow(radius: 2)
+                    .padding(.top, 20)
+                
+                Spacer()
+                
+                if showingAnswer {
+                    Image(systemName: animals[currentAnimal].image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
+                        .foregroundColor(.orange)
+                        .transition(.scale)
+                        .shadow(radius: 5)
+                }
+                
+                Button(action: {
+                    withAnimation {
+                        playSound()
+                    }
+                }) {
+                    Image(systemName: isPlaying ? "speaker.wave.2.fill" : "speaker.wave.2")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .foregroundColor(.white)
+                        .scaleEffect(isPlaying ? 1.2 : 1.0)
+                        .shadow(radius: 5)
+                }
+                
+                if showingAnswer {
+                    Text(animals[currentAnimal].name)
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.white)
+                        .transition(.scale)
+                        .shadow(radius: 2)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    withAnimation {
+                        if showingAnswer {
+                            currentAnimal = (currentAnimal + 1) % animals.count
+                            showingAnswer = false
+                        } else {
+                            showingAnswer = true
+                        }
+                    }
+                }) {
+                    Text(showingAnswer ? "つぎへ" : "こたえをみる")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 200, height: 60)
+                        .background(showingAnswer ? Color.green : Color.blue)
+                        .cornerRadius(15)
+                        .shadow(radius: 5)
+                }
+                .padding(.bottom, 30)
             }
-            .padding(.bottom, 30)
+            .padding()
         }
-        .padding()
     }
     
     func playSound() {

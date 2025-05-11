@@ -25,7 +25,7 @@ struct ShikiShiroFanClubApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AnimalSoundApp()
+            ContentView()
         }
         .modelContainer(sharedModelContainer)
     }

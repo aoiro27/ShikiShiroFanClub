@@ -27,15 +27,22 @@ struct ColorPuzzleGame: View {
     
     var body: some View {
         ZStack {
+            Image("background")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
+            
             VStack(spacing: 30) {
                 Text("いろクイズ")
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(.blue)
+                    .foregroundColor(.white)
                     .padding(.top, 20)
+                    .shadow(radius: 2)
                 
                 Text("せいかい: \(score)")
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.green)
+                    .foregroundColor(.white)
+                    .shadow(radius: 2)
                 
                 Text(questions[currentQuestion].question)
                     .font(.system(size: 28, weight: .bold))
@@ -63,7 +70,8 @@ struct ColorPuzzleGame: View {
                                 
                                 Text(colorInfo.name)
                                     .font(.system(size: 18, weight: .bold))
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 2)
                             }
                         }
                     }
@@ -73,7 +81,7 @@ struct ColorPuzzleGame: View {
             .padding()
             
             if showingResult {
-                Color.black.opacity(0.3)
+                Color.black.opacity(0.5)
                     .edgesIgnoringSafeArea(.all)
                 
                 ResultView(
@@ -85,7 +93,7 @@ struct ColorPuzzleGame: View {
             }
             
             if showingComplete {
-                Color.black.opacity(0.3)
+                Color.black.opacity(0.5)
                     .edgesIgnoringSafeArea(.all)
                 
                 GameCompleteView(

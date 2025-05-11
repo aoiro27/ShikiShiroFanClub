@@ -165,6 +165,11 @@ struct ColorPuzzleGame: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             isAnimating = false
         }
+        
+        // 1.5秒後に次の問題に進む
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            moveToNextQuestion()
+        }
     }
     
     private func moveToNextQuestion() {

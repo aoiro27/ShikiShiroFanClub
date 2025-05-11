@@ -164,11 +164,19 @@ struct NumberGame: View {
     }
     
     private func speakNumber() {
-        let utterance = AVSpeechUtterance(string: "\(currentNumber)")
-        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-        utterance.rate = 0.5  // 話す速度を少し遅く
-        utterance.pitchMultiplier = 1.2  // 声の高さを少し上げる
-        speechSynthesizer.speak(utterance)
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            let utterance = AVSpeechUtterance(string: "\(currentNumber)")
+            utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+            utterance.rate = 0.5  // 話す速度を少し遅く
+            utterance.pitchMultiplier = 1.2  // 声の高さを少し上げる
+            utterance.volume = 1.0  // 音量を最大に設定
+            speechSynthesizer.speak(utterance)
+        } catch {
+            print("音声の再生に失敗しました: \(error.localizedDescription)")
+        }
     }
 }
 

@@ -168,6 +168,9 @@ struct NumberGame: View {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
             
+            // 前の読み上げを停止
+            speechSynthesizer.stopSpeaking(at: .immediate)
+            
             let utterance = AVSpeechUtterance(string: "\(currentNumber)")
             utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
             utterance.rate = 0.5  // 話す速度を少し遅く

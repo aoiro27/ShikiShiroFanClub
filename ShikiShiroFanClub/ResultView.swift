@@ -31,17 +31,6 @@ struct ResultView: View {
             Text(isCorrect ? "すごいね！" : "つぎはがんばろう！")
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(.blue)
-            
-            Button(action: onNext) {
-                Text("つぎへ")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-                    .frame(width: 200, height: 60)
-                    .background(Color.blue)
-                    .cornerRadius(15)
-                    .shadow(radius: 5)
-            }
-            .padding(.top, 20)
         }
         .padding(30)
         .background(

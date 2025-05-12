@@ -8,7 +8,9 @@ struct ColorPuzzleGame: View {
     @State private var isCorrect = false
     @State private var isAnimating = false
     @State private var score = 0
+    @State private var renzoku = 0
     @State private var bgmPlayer: AVAudioPlayer?
+    @State private var correctSoundPlayer: AVAudioPlayer?
     @Environment(\.dismiss) private var dismiss
     @Binding var selectedGame: GameType?
     
@@ -65,7 +67,7 @@ struct ColorPuzzleGame: View {
                 
                 Text(questions[currentQuestion].question)
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(
@@ -89,7 +91,7 @@ struct ColorPuzzleGame: View {
                                 
                                 Text(colorInfo.name)
                                     .font(.system(size: 18, weight: .bold))
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                                     .shadow(radius: 2)
                             }
                         }
@@ -158,6 +160,22 @@ struct ColorPuzzleGame: View {
         isCorrect = selectedColor == questions[currentQuestion].answer
         if isCorrect {
             score += 1
+            renzoku += 1
+            playSound(forResource: "seikai", withExtension: "wav")
+            switch renzoku {
+            case 2:
+                playSound(forResource: "2問連続", withExtension: "wav")
+            case 3:
+                playSound(forResource: "3問連続", withExtension: "wav")
+            case 4:
+                playSound(forResource: "4問連続", withExtension: "wav")
+            case 5:
+                playSound(forResource: "5問連続", withExtension: "wav")
+            default: print(renzoku)
+            }
+        }else {
+            playSound(forResource: "hazure", withExtension: "wav")
+            renzoku = 0
         }
         showingResult = true
         isAnimating = true
@@ -169,6 +187,21 @@ struct ColorPuzzleGame: View {
         // 1.5秒後に次の問題に進む
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             moveToNextQuestion()
+        }
+    }
+    
+    private func playSound(forResource: String, withExtension: String) {
+        guard let url = Bundle.main.url(forResource: forResource, withExtension: withExtension) else {
+            print("効果音ファイルが見つかりません")
+            return
+        }
+        
+        do {
+            correctSoundPlayer = try AVAudioPlayer(contentsOf: url)
+            correctSoundPlayer?.volume = 1.0
+            correctSoundPlayer?.play()
+        } catch {
+            print("効果音の再生に失敗しました: \(error.localizedDescription)")
         }
     }
     

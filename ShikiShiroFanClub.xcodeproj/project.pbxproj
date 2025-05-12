@@ -10,6 +10,18 @@
 		896F8E112DD112E800A641D5 /* opening.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E102DD112E800A641D5 /* opening.mp3 */; };
 		896F8E132DD118CF00A641D5 /* bgm1.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E122DD118CF00A641D5 /* bgm1.ogg */; };
 		896F8E2D2DD11C1100A641D5 /* bgm1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E2C2DD11C1100A641D5 /* bgm1.mp3 */; };
+		896F8E362DD1F34A00A641D5 /* kiirodore.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E312DD1F34A00A641D5 /* kiirodore.wav */; };
+		896F8E372DD1F34A00A641D5 /* seikai.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E332DD1F34A00A641D5 /* seikai.wav */; };
+		896F8E382DD1F34A00A641D5 /* sikityan.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E352DD1F34A00A641D5 /* sikityan.wav */; };
+		896F8E392DD1F34A00A641D5 /* shirotyan.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E342DD1F34A00A641D5 /* shirotyan.wav */; };
+		896F8E3A2DD1F34A00A641D5 /* akairodore.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E2E2DD1F34A00A641D5 /* akairodore.wav */; };
+		896F8E3B2DD1F34A00A641D5 /* murasakiirodore.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E322DD1F34A00A641D5 /* murasakiirodore.wav */; };
+		896F8E3C2DD1F34A00A641D5 /* aoirodore.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E2F2DD1F34A00A641D5 /* aoirodore.wav */; };
+		896F8E3D2DD1F34A00A641D5 /* hazure.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E302DD1F34A00A641D5 /* hazure.wav */; };
+		896F8E5B2DD1F73E00A641D5 /* 4問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E5A2DD1F73E00A641D5 /* 4問連続.wav */; };
+		896F8E5C2DD1F73E00A641D5 /* 3問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E592DD1F73E00A641D5 /* 3問連続.wav */; };
+		896F8E5D2DD1F73E00A641D5 /* 2問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E582DD1F73E00A641D5 /* 2問連続.wav */; };
+		896F8E5F2DD1F78800A641D5 /* 5問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E5E2DD1F78800A641D5 /* 5問連続.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +48,18 @@
 		896F8E102DD112E800A641D5 /* opening.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = opening.mp3; sourceTree = "<group>"; };
 		896F8E122DD118CF00A641D5 /* bgm1.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bgm1.ogg; sourceTree = "<group>"; };
 		896F8E2C2DD11C1100A641D5 /* bgm1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bgm1.mp3; sourceTree = "<group>"; };
+		896F8E2E2DD1F34A00A641D5 /* akairodore.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = akairodore.wav; sourceTree = "<group>"; };
+		896F8E2F2DD1F34A00A641D5 /* aoirodore.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = aoirodore.wav; sourceTree = "<group>"; };
+		896F8E302DD1F34A00A641D5 /* hazure.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = hazure.wav; sourceTree = "<group>"; };
+		896F8E312DD1F34A00A641D5 /* kiirodore.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = kiirodore.wav; sourceTree = "<group>"; };
+		896F8E322DD1F34A00A641D5 /* murasakiirodore.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = murasakiirodore.wav; sourceTree = "<group>"; };
+		896F8E332DD1F34A00A641D5 /* seikai.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = seikai.wav; sourceTree = "<group>"; };
+		896F8E342DD1F34A00A641D5 /* shirotyan.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shirotyan.wav; sourceTree = "<group>"; };
+		896F8E352DD1F34A00A641D5 /* sikityan.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sikityan.wav; sourceTree = "<group>"; };
+		896F8E582DD1F73E00A641D5 /* 2問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "2問連続.wav"; sourceTree = "<group>"; };
+		896F8E592DD1F73E00A641D5 /* 3問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "3問連続.wav"; sourceTree = "<group>"; };
+		896F8E5A2DD1F73E00A641D5 /* 4問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "4問連続.wav"; sourceTree = "<group>"; };
+		896F8E5E2DD1F78800A641D5 /* 5問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "5問連続.wav"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -84,6 +108,14 @@
 		896F8D922DD1050600A641D5 = {
 			isa = PBXGroup;
 			children = (
+				896F8E2E2DD1F34A00A641D5 /* akairodore.wav */,
+				896F8E2F2DD1F34A00A641D5 /* aoirodore.wav */,
+				896F8E302DD1F34A00A641D5 /* hazure.wav */,
+				896F8E312DD1F34A00A641D5 /* kiirodore.wav */,
+				896F8E322DD1F34A00A641D5 /* murasakiirodore.wav */,
+				896F8E332DD1F34A00A641D5 /* seikai.wav */,
+				896F8E342DD1F34A00A641D5 /* shirotyan.wav */,
+				896F8E352DD1F34A00A641D5 /* sikityan.wav */,
 				896F8D9D2DD1050600A641D5 /* ShikiShiroFanClub */,
 				896F8DAD2DD1050700A641D5 /* ShikiShiroFanClubTests */,
 				896F8DB72DD1050700A641D5 /* ShikiShiroFanClubUITests */,
@@ -91,6 +123,10 @@
 				896F8E122DD118CF00A641D5 /* bgm1.ogg */,
 				896F8E2C2DD11C1100A641D5 /* bgm1.mp3 */,
 				896F8D9C2DD1050600A641D5 /* Products */,
+				896F8E582DD1F73E00A641D5 /* 2問連続.wav */,
+				896F8E592DD1F73E00A641D5 /* 3問連続.wav */,
+				896F8E5A2DD1F73E00A641D5 /* 4問連続.wav */,
+				896F8E5E2DD1F78800A641D5 /* 5問連続.wav */,
 			);
 			sourceTree = "<group>";
 		};
@@ -226,6 +262,18 @@
 			files = (
 				896F8E112DD112E800A641D5 /* opening.mp3 in Resources */,
 				896F8E2D2DD11C1100A641D5 /* bgm1.mp3 in Resources */,
+				896F8E5B2DD1F73E00A641D5 /* 4問連続.wav in Resources */,
+				896F8E5C2DD1F73E00A641D5 /* 3問連続.wav in Resources */,
+				896F8E5D2DD1F73E00A641D5 /* 2問連続.wav in Resources */,
+				896F8E5F2DD1F78800A641D5 /* 5問連続.wav in Resources */,
+				896F8E362DD1F34A00A641D5 /* kiirodore.wav in Resources */,
+				896F8E372DD1F34A00A641D5 /* seikai.wav in Resources */,
+				896F8E382DD1F34A00A641D5 /* sikityan.wav in Resources */,
+				896F8E392DD1F34A00A641D5 /* shirotyan.wav in Resources */,
+				896F8E3A2DD1F34A00A641D5 /* akairodore.wav in Resources */,
+				896F8E3B2DD1F34A00A641D5 /* murasakiirodore.wav in Resources */,
+				896F8E3C2DD1F34A00A641D5 /* aoirodore.wav in Resources */,
+				896F8E3D2DD1F34A00A641D5 /* hazure.wav in Resources */,
 				896F8E132DD118CF00A641D5 /* bgm1.ogg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

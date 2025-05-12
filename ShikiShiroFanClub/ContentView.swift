@@ -44,7 +44,7 @@ struct ContentView: View {
                         .shadow(radius: 2)
                     
                     VStack(spacing: 20) {
-                        GameButton(title: "どうぶつのなきごえ", systemImage: "speaker.wave.2.fill") {
+                        GameButton(title: "どうぶつのおなまえ", systemImage: "speaker.wave.2.fill") {
                             selectedGame = .animalSound
                         }
                         

@@ -2,18 +2,27 @@ import SwiftUI
 import AVFoundation
 
 struct AnimalSoundGame: View {
-    @State private var currentAnimal = 0
-    @State private var isPlaying = false
     @State private var audioPlayer: AVAudioPlayer?
     @State private var bgmPlayer: AVAudioPlayer?
     @Binding var selectedGame: GameType?
     
     let animals = [
-        ("いぬ", "dog"),
-        ("ねこ", "cat"),
-        ("うし", "cow"),
-        ("ぶた", "pig"),
-        ("ひつじ", "sheep")
+        ("きつね", "きつね", "きつね"),
+        ("いぬ", "いぬ", "いぬ"),
+        ("ねこ", "ねこ", "ねこ"),
+        ("ぶた", "pig", "ぶた"),
+        ("こあら", "こあら", "こあら"),
+        ("ぱんだ", "ぱんだ", "ぱんだ"),
+        ("？？？", "しきちゃん", "しきちゃん"),
+        ("ぞう", "ぞう", "ぞう"),
+        ("ねずみ", "ねずみ", "ねずみ"),
+        ("さる", "さる", "さる"),
+        ("うさぎ", "うさぎ", "うさぎ"),
+        ("？？？", "しろちゃん", "しろちゃん")
+    ]
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 150), spacing: 20)
     ]
     
     var body: some View {
@@ -23,7 +32,7 @@ struct AnimalSoundGame: View {
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
             
-            VStack(spacing: 40) {
+            VStack(spacing: 20) {
                 HStack {
                     Button(action: {
                         selectedGame = nil
@@ -40,69 +49,37 @@ struct AnimalSoundGame: View {
                 }
                 .padding(.horizontal)
                 
-                Text("どうぶつのなきごえ")
+                Text("どうぶつのなまえ")
                     .font(.system(size: 40, weight: .bold))
                     .foregroundColor(.white)
                     .shadow(radius: 3)
                 
-                Image(animals[currentAnimal].1)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 300, height: 300)
-                    .shadow(radius: 10)
-                
-                Text(animals[currentAnimal].0)
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
-                    .shadow(radius: 3)
-                
-                HStack(spacing: 40) {
-                    Button(action: {
-                        if currentAnimal > 0 {
-                            currentAnimal -= 1
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(animals, id: \.1) { animal in
+                            Button(action: {
+                                playSound(forResource: animal.2, withExtension: "wav")
+                            }) {
+                                VStack {
+                                    Image(animal.1)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 150, height: 150)
+                                        .background(Color.white.opacity(0.8))
+                                        .cornerRadius(15)
+                                        .shadow(radius: 5)
+                                    
+                                    Text(animal.0)
+                                        .font(.system(size: 24, weight: .bold))
+                                        .foregroundColor(.white)
+                                        .shadow(radius: 2)
+                                }
+                            }
                         }
-                    }) {
-                        Image(systemName: "arrow.left.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 80, height: 80)
-                            .foregroundColor(.white)
-                            .background(Color.blue.opacity(0.8))
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
                     }
-                    
-                    Button(action: {
-                        playSound()
-                    }) {
-                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .foregroundColor(.white)
-                            .background(Color.green.opacity(0.8))
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
-                    }
-                    
-                    Button(action: {
-                        if currentAnimal < animals.count - 1 {
-                            currentAnimal += 1
-                        }
-                    }) {
-                        Image(systemName: "arrow.right.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 80, height: 80)
-                            .foregroundColor(.white)
-                            .background(Color.blue.opacity(0.8))
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
-                    }
+                    .padding()
                 }
-                .padding(.top, 20)
             }
-            .padding()
         }
         .onAppear {
             setupBGM()
@@ -132,28 +109,16 @@ struct AnimalSoundGame: View {
         }
     }
     
-    private func playSound() {
-        if isPlaying {
-            audioPlayer?.stop()
-            isPlaying = false
-            return
-        }
-        
-        guard let url = Bundle.main.url(forResource: animals[currentAnimal].1, withExtension: "mp3") else {
+    private func playSound(forResource: String, withExtension: String) {
+        guard let url = Bundle.main.url(forResource: forResource, withExtension: withExtension) else {
             print("音声ファイルが見つかりません")
             return
         }
         
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.delegate = nil
+            audioPlayer?.volume = 1.0
             audioPlayer?.play()
-            isPlaying = true
-            
-            // 音声再生が終了したら再生状態をリセット
-            DispatchQueue.main.asyncAfter(deadline: .now() + audioPlayer!.duration) {
-                isPlaying = false
-            }
         } catch {
             print("音声の再生に失敗しました: \(error.localizedDescription)")
         }

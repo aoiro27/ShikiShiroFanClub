@@ -12,6 +12,8 @@ import AVFoundation
 struct ContentView: View {
     @State private var selectedGame: GameType?
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var titleSoundPlayer: AVAudioPlayer?
+    @State private var hasPlayedTitleSound = false
     
     var body: some View {
         ZStack {
@@ -62,6 +64,10 @@ struct ContentView: View {
         .onAppear {
             setupAudioSession()
             setupAudio()
+            if !hasPlayedTitleSound {
+                playTitleSound()
+                hasPlayedTitleSound = true
+            }
         }
         .onChange(of: selectedGame) { newValue in
             if newValue != nil {
@@ -95,6 +101,21 @@ struct ContentView: View {
             audioPlayer?.play()
         } catch {
             print("BGMの再生に失敗しました: \(error.localizedDescription)")
+        }
+    }
+    
+    private func playTitleSound() {
+        guard let url = Bundle.main.url(forResource: "title", withExtension: "wav") else {
+            print("タイトル音声ファイルが見つかりません")
+            return
+        }
+        
+        do {
+            titleSoundPlayer = try AVAudioPlayer(contentsOf: url)
+            titleSoundPlayer?.volume = 1.0
+            titleSoundPlayer?.play()
+        } catch {
+            print("タイトル音声の再生に失敗しました: \(error.localizedDescription)")
         }
     }
 }

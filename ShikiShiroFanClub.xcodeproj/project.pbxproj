@@ -22,6 +22,7 @@
 		896F8E5C2DD1F73E00A641D5 /* 3問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E592DD1F73E00A641D5 /* 3問連続.wav */; };
 		896F8E5D2DD1F73E00A641D5 /* 2問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E582DD1F73E00A641D5 /* 2問連続.wav */; };
 		896F8E5F2DD1F78800A641D5 /* 5問連続.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E5E2DD1F78800A641D5 /* 5問連続.wav */; };
+		896F8E612DD20E6900A641D5 /* title.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E602DD20E6900A641D5 /* title.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		896F8E592DD1F73E00A641D5 /* 3問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "3問連続.wav"; sourceTree = "<group>"; };
 		896F8E5A2DD1F73E00A641D5 /* 4問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "4問連続.wav"; sourceTree = "<group>"; };
 		896F8E5E2DD1F78800A641D5 /* 5問連続.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "5問連続.wav"; sourceTree = "<group>"; };
+		896F8E602DD20E6900A641D5 /* title.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = title.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -127,6 +129,7 @@
 				896F8E592DD1F73E00A641D5 /* 3問連続.wav */,
 				896F8E5A2DD1F73E00A641D5 /* 4問連続.wav */,
 				896F8E5E2DD1F78800A641D5 /* 5問連続.wav */,
+				896F8E602DD20E6900A641D5 /* title.wav */,
 			);
 			sourceTree = "<group>";
 		};
@@ -261,6 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				896F8E112DD112E800A641D5 /* opening.mp3 in Resources */,
+				896F8E612DD20E6900A641D5 /* title.wav in Resources */,
 				896F8E2D2DD11C1100A641D5 /* bgm1.mp3 in Resources */,
 				896F8E5B2DD1F73E00A641D5 /* 4問連続.wav in Resources */,
 				896F8E5C2DD1F73E00A641D5 /* 3問連続.wav in Resources */,

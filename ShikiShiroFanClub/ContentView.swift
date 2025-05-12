@@ -46,14 +46,17 @@ struct ContentView: View {
                     VStack(spacing: 20) {
                         GameButton(title: "どうぶつのおなまえ", systemImage: "speaker.wave.2.fill") {
                             selectedGame = .animalSound
+                            playSound(forResource: "どうぶつのおなまえ", withExtension: "wav")
                         }
                         
                         GameButton(title: "いろあてクイズ", systemImage: "paintpalette.fill") {
                             selectedGame = .colorPuzzle
+                            playSound(forResource: "いろあてくいず", withExtension: "wav")
                         }
                         
                         GameButton(title: "すうじをかぞえよう", systemImage: "number.circle.fill") {
                             selectedGame = .number
+                            playSound(forResource: "すうじをかぞえよう", withExtension: "wav")
                         }
                     }
                     .padding(.top, 20)
@@ -75,6 +78,21 @@ struct ContentView: View {
             } else {
                 setupAudio()
             }
+        }
+    }
+    
+    private func playSound(forResource: String, withExtension: String) {
+        guard let url = Bundle.main.url(forResource: forResource, withExtension: withExtension) else {
+            print("音声ファイルが見つかりません")
+            return
+        }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.volume = 1.0
+            audioPlayer?.play()
+        } catch {
+            print("音声の再生に失敗しました: \(error.localizedDescription)")
         }
     }
     

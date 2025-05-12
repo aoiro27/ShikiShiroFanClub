@@ -42,6 +42,9 @@
 		896F8E842DD2178700A641D5 /* ぱんだ.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E802DD2178700A641D5 /* ぱんだ.wav */; };
 		896F8E852DD2178700A641D5 /* こあら.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E7C2DD2178700A641D5 /* こあら.wav */; };
 		896F8E872DD2180500A641D5 /* きつね.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E862DD2180500A641D5 /* きつね.wav */; };
+		896F8E8B2DD21BC700A641D5 /* すうじをかぞえよう.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E892DD21BC700A641D5 /* すうじをかぞえよう.wav */; };
+		896F8E8C2DD21BC700A641D5 /* いろあてくいず.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E882DD21BC700A641D5 /* いろあてくいず.wav */; };
+		896F8E8D2DD21BC700A641D5 /* どうぶつのおなまえ.wav in Resources */ = {isa = PBXBuildFile; fileRef = 896F8E8A2DD21BC700A641D5 /* どうぶつのおなまえ.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +103,9 @@
 		896F8E7F2DD2178700A641D5 /* ねずみ.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "ねずみ.wav"; sourceTree = "<group>"; };
 		896F8E802DD2178700A641D5 /* ぱんだ.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "ぱんだ.wav"; sourceTree = "<group>"; };
 		896F8E862DD2180500A641D5 /* きつね.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "きつね.wav"; sourceTree = "<group>"; };
+		896F8E882DD21BC700A641D5 /* いろあてくいず.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "いろあてくいず.wav"; sourceTree = "<group>"; };
+		896F8E892DD21BC700A641D5 /* すうじをかぞえよう.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "すうじをかぞえよう.wav"; sourceTree = "<group>"; };
+		896F8E8A2DD21BC700A641D5 /* どうぶつのおなまえ.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "どうぶつのおなまえ.wav"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -187,6 +193,9 @@
 				896F8E7F2DD2178700A641D5 /* ねずみ.wav */,
 				896F8E862DD2180500A641D5 /* きつね.wav */,
 				896F8E802DD2178700A641D5 /* ぱんだ.wav */,
+				896F8E882DD21BC700A641D5 /* いろあてくいず.wav */,
+				896F8E892DD21BC700A641D5 /* すうじをかぞえよう.wav */,
+				896F8E8A2DD21BC700A641D5 /* どうぶつのおなまえ.wav */,
 			);
 			sourceTree = "<group>";
 		};
@@ -352,6 +361,9 @@
 				896F8E832DD2178700A641D5 /* しろちゃん.wav in Resources */,
 				896F8E842DD2178700A641D5 /* ぱんだ.wav in Resources */,
 				896F8E852DD2178700A641D5 /* こあら.wav in Resources */,
+				896F8E8B2DD21BC700A641D5 /* すうじをかぞえよう.wav in Resources */,
+				896F8E8C2DD21BC700A641D5 /* いろあてくいず.wav in Resources */,
+				896F8E8D2DD21BC700A641D5 /* どうぶつのおなまえ.wav in Resources */,
 				896F8E3C2DD1F34A00A641D5 /* aoirodore.wav in Resources */,
 				896F8E3D2DD1F34A00A641D5 /* hazure.wav in Resources */,
 				896F8E132DD118CF00A641D5 /* bgm1.ogg in Resources */,

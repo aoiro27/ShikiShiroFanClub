@@ -27,33 +27,20 @@ struct AnimalSoundGame: View {
     
     var body: some View {
         ZStack {
+            // 背景
             Image("background2")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
-            
+
+            // メインコンテンツ
             VStack(spacing: 20) {
-                HStack {
-                    Button(action: {
-                        selectedGame = nil
-                    }) {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue.opacity(0.8))
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal)
-                
                 Text("どうぶつのなまえ")
                     .font(.system(size: 40, weight: .bold))
                     .foregroundColor(.white)
                     .shadow(radius: 3)
-                
+                    .padding(.top, 20)
+                    .padding(.bottom,100)
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 20) {
                         ForEach(animals, id: \.1) { animal in
@@ -68,7 +55,6 @@ struct AnimalSoundGame: View {
                                         .background(Color.white.opacity(0.8))
                                         .cornerRadius(15)
                                         .shadow(radius: 5)
-                                    
                                     Text(animal.0)
                                         .font(.system(size: 24, weight: .bold))
                                         .foregroundColor(.white)
@@ -80,13 +66,30 @@ struct AnimalSoundGame: View {
                     .padding()
                 }
             }
+
+            // ホームボタンをZStackの最上層に重ねて左上に絶対配置
+            VStack {
+                HStack {
+                    Button(action: {
+                        selectedGame = nil
+                    }) {
+                        Image(systemName: "house.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue.opacity(0.9))
+                            .clipShape(Circle())
+                            .shadow(radius: 8)
+                    }
+                    Spacer()
+                }
+                Spacer()
+            }
+            .padding(.top, 100)
+            .padding(.leading, 10)
         }
-        .onAppear {
-            setupBGM()
-        }
-        .onDisappear {
-            bgmPlayer?.stop()
-        }
+        .onAppear { setupBGM() }
+        .onDisappear { bgmPlayer?.stop() }
     }
     
     private func setupBGM() {

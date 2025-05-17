@@ -4,7 +4,7 @@ import AVFoundation
 struct AnimalSoundGame: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var bgmPlayer: AVAudioPlayer?
-    @Binding var selectedGame: GameType?
+    @Environment(\.dismiss) private var dismiss
     
     let animals = [
         ("きつね", "きつね", "きつね"),
@@ -66,28 +66,8 @@ struct AnimalSoundGame: View {
                     .padding()
                 }
             }
-
-            // ホームボタンをZStackの最上層に重ねて左上に絶対配置
-            VStack {
-                HStack {
-                    Button(action: {
-                        selectedGame = nil
-                    }) {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 40))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue.opacity(0.9))
-                            .clipShape(Circle())
-                            .shadow(radius: 8)
-                    }
-                    Spacer()
-                }
-                Spacer()
-            }
-            .padding(.top, 100)
-            .padding(.leading, 10)
         }
+        .navigationBarBackButtonHidden(false)
         .onAppear { setupBGM() }
         .onDisappear { bgmPlayer?.stop() }
     }
@@ -130,6 +110,6 @@ struct AnimalSoundGame: View {
 
 struct AnimalSoundGame_Previews: PreviewProvider {
     static var previews: some View {
-        AnimalSoundGame(selectedGame: .constant(nil))
+        AnimalSoundGame()
     }
 }

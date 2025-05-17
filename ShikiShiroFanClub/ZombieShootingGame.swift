@@ -27,42 +27,36 @@ struct ZombieShootingGame: View {
     @State private var isGameOver = false
     @State private var bgmPlayer: AVAudioPlayer?
     @State private var popPlayer: AVAudioPlayer?
-    @Binding var selectedGame: GameType?
-    
-    let gameTime: Double = 30 // 30秒
-    @State private var timeLeft: Double = 30
+    @State private var missPlayer: AVAudioPlayer?
+    @State private var life = 3
+    @State private var heartScale: CGFloat = 1.0
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ZStack {
-            Image("background2")
+            Image("ghost_bg")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
             
-            VStack {
+            GeometryReader { geometry in
+                let safeTop = geometry.safeAreaInsets.top
                 HStack {
-                    Button(action: { selectedGame = nil }) {
-                        Image(systemName: "house.fill")
+                    ForEach(0..<life, id: \.self) { _ in
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(.red)
                             .font(.system(size: 32))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue.opacity(0.8))
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
+                            .scaleEffect(heartScale)
+                            .animation(.easeInOut(duration: 0.2), value: heartScale)
                     }
                     Spacer()
                     Text("スコア: \(score)")
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
                         .shadow(radius: 2)
-                    Spacer()
-                    Text("のこり: \(Int(timeLeft))")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.white)
-                        .shadow(radius: 2)
                 }
                 .padding(.horizontal)
-                .padding(.top, 20)
+                .padding(.top, safeTop + 8)
             }
             
             // ゾンビたち
@@ -76,37 +70,8 @@ struct ZombieShootingGame: View {
                     }
                     .animation(.linear(duration: 0.1), value: zombies)
             }
-            
-            if isGameOver {
-                VStack(spacing: 20) {
-                    Text("ゲーム終了！")
-                        .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.white)
-                        .shadow(radius: 3)
-                    Text("スコア: \(score)")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.yellow)
-                        .shadow(radius: 2)
-                    Button("もういちど！") {
-                        startGame()
-                    }
-                    .font(.system(size: 28, weight: .bold))
-                    .padding()
-                    .background(Color.green.opacity(0.8))
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-                    .shadow(radius: 5)
-                    Button("ホームにもどる") {
-                        selectedGame = nil
-                    }
-                    .font(.system(size: 24, weight: .bold))
-                    .padding()
-                }
-                .background(Color.black.opacity(0.7))
-                .cornerRadius(20)
-                .padding()
-            }
         }
+        .navigationBarBackButtonHidden(false)
         .onAppear {
             startGame()
             playBGM()
@@ -119,43 +84,43 @@ struct ZombieShootingGame: View {
     
     func startGame() {
         score = 0
-        timeLeft = gameTime
         isGameOver = false
         zombies = []
+        life = 3
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { _ in
             updateZombies()
-        }
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { t in
-            timeLeft -= 1
-            if timeLeft <= 0 {
-                t.invalidate()
-                timer?.invalidate()
-                isGameOver = true
-            }
         }
     }
     
     func updateZombies() {
         // ゾンビを前進
-        if(!zombies.isEmpty){
-            print(zombies[0].y)
+        zombies = zombies.map { zombie in
+            var z = zombie
+            z.y += CGFloat(z.speed)
+            return z
         }
-        for i in zombies.indices {
-            zombies[i].y += 5
+        // 画面外のゾンビを消す＋ライフ減少
+        let screenHeight = UIScreen.main.bounds.height
+        let survived = zombies.filter { $0.y <= screenHeight + 100 }
+        let passed = zombies.filter { $0.y > screenHeight + 100 }
+        if !passed.isEmpty {
+            life -= passed.count
+            playMissSound()
+            animateHeart()
+            if life <= 0 {
+                isGameOver = true
+                timer?.invalidate()
+            }
         }
-        if(!zombies.isEmpty){
-            print(zombies[0].y)
-        }
-        // 画面外のゾンビを消す
-        zombies.removeAll { $0.y > UIScreen.main.bounds.height + 100 }
+        zombies = survived
         // ランダムで新しいゾンビを追加
         if Int.random(in: 0...20) == 0 {
             let x = CGFloat.random(in: 80...(UIScreen.main.bounds.width-80))
             let speed = Double.random(in: 2.0...4.0)
-            let images = ["zombie1", "zombie1", "zombie1"] // かわいいゾンビ画像名
+            let images = ["zombie1"] // かわいいゾンビ画像名
             let imageName = images.randomElement() ?? "zombie1"
-            zombies.append(Zombie(x: x, y: 200, speed: speed, imageName: imageName))
+            zombies.append(Zombie(x: x, y: -80, speed: speed, imageName: imageName))
         }
     }
     
@@ -169,7 +134,7 @@ struct ZombieShootingGame: View {
     }
     
     func playBGM() {
-        guard let url = Bundle.main.url(forResource: "zombie_bgm", withExtension: "mp3") else { return }
+        guard let url = Bundle.main.url(forResource: "zombie_bg", withExtension: "mp3") else { return }
         do {
             bgmPlayer = try AVAudioPlayer(contentsOf: url)
             bgmPlayer?.numberOfLoops = -1
@@ -185,5 +150,27 @@ struct ZombieShootingGame: View {
             popPlayer?.volume = 1.0
             popPlayer?.play()
         } catch {}
+    }
+    
+    func playMissSound() {
+        guard let url = Bundle.main.url(forResource: "miss", withExtension: "wav") else { return }
+        do {
+            missPlayer = try AVAudioPlayer(contentsOf: url)
+            missPlayer?.volume = 1.0
+            missPlayer?.play()
+        } catch {}
+    }
+    
+    func animateHeart() {
+        heartScale = 0.7
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            heartScale = 1.0
+        }
+    }
+}
+
+struct ZombieShootingGame_Previews: PreviewProvider {
+    static var previews: some View {
+        ZombieShootingGame()
     }
 } 

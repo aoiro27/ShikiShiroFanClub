@@ -10,30 +10,18 @@ import SwiftData
 import AVFoundation
 
 struct ContentView: View {
-    @State private var selectedGame: GameType?
     @State private var audioPlayer: AVAudioPlayer?
     @State private var titleSoundPlayer: AVAudioPlayer?
     @State private var hasPlayedTitleSound = false
     
     var body: some View {
-        ZStack {
-            Image("background")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .edgesIgnoringSafeArea(.all)
-            
-            if let game = selectedGame {
-                switch game {
-                case .animalSound:
-                    AnimalSoundGame(selectedGame: $selectedGame)
-                case .colorPuzzle:
-                    ColorPuzzleGame(selectedGame: $selectedGame)
-                case .number:
-                    NumberGame(selectedGame: $selectedGame)
-                case .zombieShooting:
-                    ZombieShootingGame(selectedGame: $selectedGame)
-                }
-            } else {
+        NavigationStack {
+            ZStack {
+                Image("background")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
+                
                 VStack(spacing: 30) {
                     Text("しきしろファンクラブ")
                         .font(.system(size: 40, weight: .bold))
@@ -46,40 +34,33 @@ struct ContentView: View {
                         .shadow(radius: 2)
                     
                     VStack(spacing: 20) {
-                        GameButton(title: "どうぶつのなきごえ", systemImage: "speaker.wave.2.fill") {
-                            selectedGame = .animalSound
+                        NavigationLink(destination: AnimalSoundGame()) {
+                            GameButton(title: "どうぶつのなきごえ", systemImage: "speaker.wave.2.fill")
                         }
                         
-                        GameButton(title: "いろあてクイズ", systemImage: "paintpalette.fill") {
-                            selectedGame = .colorPuzzle
+                        NavigationLink(destination: ColorPuzzleGame()) {
+                            GameButton(title: "いろあてクイズ", systemImage: "paintpalette.fill")
                         }
                         
-                        GameButton(title: "すうじをかぞえよう", systemImage: "number.circle.fill") {
-                            selectedGame = .number
+                        NavigationLink(destination: NumberGame()) {
+                            GameButton(title: "すうじをかぞえよう", systemImage: "number.circle.fill")
                         }
                         
-                        GameButton(title: "ゾンビシューティング", systemImage: "target") {
-                            selectedGame = .zombieShooting
+                        NavigationLink(destination: ZombieShootingGame()) {
+                            GameButton(title: "ゾンビシューティング", systemImage: "target")
                         }
                     }
                     .padding(.top, 20)
                 }
                 .padding()
             }
-        }
-        .onAppear {
-            setupAudioSession()
-            setupAudio()
-            if !hasPlayedTitleSound {
-                playTitleSound()
-                hasPlayedTitleSound = true
-            }
-        }
-        .onChange(of: selectedGame) { newValue in
-            if newValue != nil {
-                audioPlayer?.stop()
-            } else {
+            .onAppear {
+                setupAudioSession()
                 setupAudio()
+                if !hasPlayedTitleSound {
+                    playTitleSound()
+                    hasPlayedTitleSound = true
+                }
             }
         }
     }
@@ -144,23 +125,20 @@ struct ContentView: View {
 struct GameButton: View {
     let title: String
     let systemImage: String
-    let action: () -> Void
     
     var body: some View {
-        Button(action: action) {
-            HStack {
-                Image(systemName: systemImage)
-                    .font(.system(size: 24))
-                Text(title)
-                    .font(.system(size: 20, weight: .bold))
-            }
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.blue.opacity(0.8))
-            .cornerRadius(15)
-            .shadow(radius: 5)
+        HStack {
+            Image(systemName: systemImage)
+                .font(.system(size: 24))
+            Text(title)
+                .font(.system(size: 20, weight: .bold))
         }
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.blue.opacity(0.8))
+        .cornerRadius(15)
+        .shadow(radius: 5)
     }
 }
 

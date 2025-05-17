@@ -6,7 +6,7 @@ struct NumberGame: View {
     @State private var isAnimating = false
     @State private var speechSynthesizer = AVSpeechSynthesizer()
     @State private var bgmPlayer: AVAudioPlayer?
-    @Binding var selectedGame: GameType?
+    @Environment(\.dismiss) private var dismiss
     
     let maxNumber = 1000
     
@@ -18,22 +18,6 @@ struct NumberGame: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 30) {
-                HStack {
-                    Button(action: {
-                        selectedGame = nil
-                    }) {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue.opacity(0.8))
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal)
-                
                 Text("すうじをかぞえよう！")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
@@ -128,6 +112,7 @@ struct NumberGame: View {
             }
             .padding()
         }
+        .navigationBarBackButtonHidden(false)
         .onAppear {
             setupBGM()
         }
@@ -185,6 +170,6 @@ struct NumberGame: View {
 
 struct NumberGame_Previews: PreviewProvider {
     static var previews: some View {
-        NumberGame(selectedGame: .constant(nil))
+        NumberGame()
     }
 } 

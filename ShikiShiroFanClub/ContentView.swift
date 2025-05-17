@@ -17,7 +17,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("background")
+                Image("home_background")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .ignoresSafeArea()
@@ -34,21 +34,29 @@ struct ContentView: View {
                         .shadow(radius: 2)
                     
                     VStack(spacing: 20) {
-                        NavigationLink(destination: AnimalSoundGame()) {
-                            GameButton(title: "どうぶつのなきごえ", systemImage: "speaker.wave.2.fill")
-                        }
+                        GameButton(
+                            title: "どうぶつのなきごえ",
+                            systemImage: "speaker.wave.2.fill",
+                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                        )
                         
-                        NavigationLink(destination: ColorPuzzleGame()) {
-                            GameButton(title: "いろあてクイズ", systemImage: "paintpalette.fill")
-                        }
+                        GameButton(
+                            title: "いろあてクイズ",
+                            systemImage: "paintpalette.fill",
+                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                        )
                         
-                        NavigationLink(destination: NumberGame()) {
-                            GameButton(title: "すうじをかぞえよう", systemImage: "number.circle.fill")
-                        }
+                        GameButton(
+                            title: "すうじをかぞえよう",
+                            systemImage: "number.circle.fill",
+                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                        )
                         
-                        NavigationLink(destination: ZombieShootingGame()) {
-                            GameButton(title: "ゾンビシューティング", systemImage: "target")
-                        }
+                        GameButton(
+                            title: "ゾンビシューティング",
+                            systemImage: "target",
+                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                        )
                     }
                     .padding(.top, 20)
                 }
@@ -125,6 +133,8 @@ struct ContentView: View {
 struct GameButton: View {
     let title: String
     let systemImage: String
+    let onTap: (() -> Void)?
+    @State private var isNavigating = false
     
     var body: some View {
         HStack {
@@ -139,6 +149,35 @@ struct GameButton: View {
         .background(Color.blue.opacity(0.8))
         .cornerRadius(15)
         .shadow(radius: 5)
+        .onTapGesture {
+            onTap?()
+            // 効果音の再生が完了するのを待ってから画面遷移
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                isNavigating = true
+            }
+        }
+        .background(
+            NavigationLink(
+                destination: destination,
+                isActive: $isNavigating,
+                label: { EmptyView() }
+            )
+        )
+    }
+    
+    var destination: some View {
+        switch title {
+        case "どうぶつのなきごえ":
+            return AnyView(AnimalSoundGame())
+        case "いろあてクイズ":
+            return AnyView(ColorPuzzleGame())
+        case "すうじをかぞえよう":
+            return AnyView(NumberGame())
+        case "ゾンビシューティング":
+            return AnyView(ZombieShootingGame())
+        default:
+            return AnyView(EmptyView())
+        }
     }
 }
 

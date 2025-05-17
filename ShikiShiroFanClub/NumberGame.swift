@@ -12,7 +12,7 @@ struct NumberGame: View {
     
     var body: some View {
         ZStack {
-            Image("background2")
+            Image("number_background")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)

@@ -10,7 +10,7 @@ struct AnimalSoundGame: View {
         ("きつね", "きつね", "きつね"),
         ("いぬ", "いぬ", "いぬ"),
         ("ねこ", "ねこ", "ねこ"),
-        ("ぶた", "pig", "ぶた"),
+        ("ぶた", "ぶた", "ぶた"),
         ("こあら", "こあら", "こあら"),
         ("ぱんだ", "ぱんだ", "ぱんだ"),
         ("？？？", "しきちゃん", "しきちゃん"),
@@ -28,7 +28,7 @@ struct AnimalSoundGame: View {
     var body: some View {
         ZStack {
             // 背景
-            Image("background2")
+            Image("animal_background")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)

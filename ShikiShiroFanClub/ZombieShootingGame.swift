@@ -34,7 +34,7 @@ struct ZombieShootingGame: View {
     
     var body: some View {
         ZStack {
-            Image("ghost_bg")
+            Image("zombie_background")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()

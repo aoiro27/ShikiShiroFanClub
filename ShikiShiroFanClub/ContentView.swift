@@ -30,6 +30,8 @@ struct ContentView: View {
                     ColorPuzzleGame(selectedGame: $selectedGame)
                 case .number:
                     NumberGame(selectedGame: $selectedGame)
+                case .zombieShooting:
+                    ZombieShootingGame(selectedGame: $selectedGame)
                 }
             } else {
                 VStack(spacing: 30) {
@@ -44,19 +46,20 @@ struct ContentView: View {
                         .shadow(radius: 2)
                     
                     VStack(spacing: 20) {
-                        GameButton(title: "どうぶつのおなまえ", systemImage: "speaker.wave.2.fill") {
+                        GameButton(title: "どうぶつのなきごえ", systemImage: "speaker.wave.2.fill") {
                             selectedGame = .animalSound
-                            playSound(forResource: "どうぶつのおなまえ", withExtension: "wav")
                         }
                         
                         GameButton(title: "いろあてクイズ", systemImage: "paintpalette.fill") {
                             selectedGame = .colorPuzzle
-                            playSound(forResource: "いろあてくいず", withExtension: "wav")
                         }
                         
                         GameButton(title: "すうじをかぞえよう", systemImage: "number.circle.fill") {
                             selectedGame = .number
-                            playSound(forResource: "すうじをかぞえよう", withExtension: "wav")
+                        }
+                        
+                        GameButton(title: "ゾンビシューティング", systemImage: "target") {
+                            selectedGame = .zombieShooting
                         }
                     }
                     .padding(.top, 20)
@@ -88,9 +91,9 @@ struct ContentView: View {
         }
         
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.volume = 1.0
-            audioPlayer?.play()
+            titleSoundPlayer = try AVAudioPlayer(contentsOf: url)
+            titleSoundPlayer?.volume = 1.0
+            titleSoundPlayer?.play()
         } catch {
             print("音声の再生に失敗しました: \(error.localizedDescription)")
         }
@@ -165,6 +168,7 @@ enum GameType {
     case animalSound
     case colorPuzzle
     case number
+    case zombieShooting
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -172,3 +176,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+

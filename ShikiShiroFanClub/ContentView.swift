@@ -37,25 +37,37 @@ struct ContentView: View {
                         GameButton(
                             title: "どうぶつのなきごえ",
                             systemImage: "speaker.wave.2.fill",
-                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                            onTap: {
+                                audioPlayer?.stop()
+                                playSound(forResource: "どうぶつのおなまえ", withExtension: "wav")
+                            }
                         )
                         
                         GameButton(
                             title: "いろあてクイズ",
                             systemImage: "paintpalette.fill",
-                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                            onTap: {
+                                audioPlayer?.stop()
+                                playSound(forResource: "いろあてくいず", withExtension: "wav")
+                            }
                         )
                         
                         GameButton(
                             title: "すうじをかぞえよう",
                             systemImage: "number.circle.fill",
-                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                            onTap: {
+                                audioPlayer?.stop()
+                                playSound(forResource: "すうじをかぞえよう", withExtension: "wav")
+                            }
                         )
                         
                         GameButton(
                             title: "ゾンビシューティング",
                             systemImage: "target",
-                            onTap: { playSound(forResource: "button", withExtension: "wav") }
+                            onTap: {
+                                audioPlayer?.stop()
+                                playSound(forResource: "ぞんびしゅーてぃんぐ", withExtension: "wav")
+                            }
                         )
                     }
                     .padding(.top, 20)
@@ -82,6 +94,7 @@ struct ContentView: View {
         do {
             titleSoundPlayer = try AVAudioPlayer(contentsOf: url)
             titleSoundPlayer?.volume = 1.0
+            titleSoundPlayer?.numberOfLoops = 0 
             titleSoundPlayer?.play()
         } catch {
             print("音声の再生に失敗しました: \(error.localizedDescription)")
@@ -135,6 +148,7 @@ struct GameButton: View {
     let systemImage: String
     let onTap: (() -> Void)?
     @State private var isNavigating = false
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         HStack {
@@ -168,13 +182,89 @@ struct GameButton: View {
     var destination: some View {
         switch title {
         case "どうぶつのなきごえ":
-            return AnyView(AnimalSoundGame())
+            return AnyView(
+                AnimalSoundGame()
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                dismiss()
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                    Text("もどる")
+                                }
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.blue.opacity(0.8))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+            )
         case "いろあてクイズ":
-            return AnyView(ColorPuzzleGame())
+            return AnyView(
+                ColorPuzzleGame()
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                dismiss()
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                    Text("もどる")
+                                }
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.blue.opacity(0.8))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+            )
         case "すうじをかぞえよう":
-            return AnyView(NumberGame())
+            return AnyView(
+                NumberGame()
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                dismiss()
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                    Text("もどる")
+                                }
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.blue.opacity(0.8))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+            )
         case "ゾンビシューティング":
-            return AnyView(ZombieShootingGame())
+            return AnyView(
+                ZombieShootingGame()
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                dismiss()
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                    Text("もどる")
+                                }
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.blue.opacity(0.8))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+            )
         default:
             return AnyView(EmptyView())
         }

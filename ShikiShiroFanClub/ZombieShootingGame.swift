@@ -54,8 +54,9 @@ struct ZombieShootingGame: View {
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
                         .shadow(radius: 2)
+                    
                 }
-                .padding(.horizontal)
+               // .padding(.horizontal)
                 .padding(.top, safeTop + 8)
             }
             
@@ -70,6 +71,38 @@ struct ZombieShootingGame: View {
                     }
                     .animation(.linear(duration: 0.1), value: zombies)
             }
+            
+            
+            if isGameOver {
+                VStack(spacing: 20) {
+                    Text("ゲーム終了！")
+                        .font(.system(size: 40, weight: .bold))
+                        .foregroundColor(.white)
+                        .shadow(radius: 3)
+                    Text("スコア: \(score)")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(.yellow)
+                        .shadow(radius: 2)
+                    Button("もういちど！") {
+                        startGame()
+                    }
+                    .font(.system(size: 28, weight: .bold))
+                    .padding()
+                    .background(Color.green.opacity(0.8))
+                    .foregroundColor(.white)
+                    .cornerRadius(15)
+                    .shadow(radius: 5)
+                    Button("ホームにもどる") {
+                        dismiss()
+                    }
+                    .font(.system(size: 24, weight: .bold))
+                    .padding()
+                }
+                .background(Color.black.opacity(0.7))
+                .cornerRadius(20)
+                .padding()
+            }
+            
         }
         .navigationBarBackButtonHidden(false)
         .onAppear {
@@ -134,7 +167,7 @@ struct ZombieShootingGame: View {
     }
     
     func playBGM() {
-        guard let url = Bundle.main.url(forResource: "zombie_bg", withExtension: "mp3") else { return }
+        guard let url = Bundle.main.url(forResource: "zombie_bgm", withExtension: "mp3") else { return }
         do {
             bgmPlayer = try AVAudioPlayer(contentsOf: url)
             bgmPlayer?.numberOfLoops = -1
@@ -144,7 +177,7 @@ struct ZombieShootingGame: View {
     }
     
     func playPopSound() {
-        guard let url = Bundle.main.url(forResource: "pop", withExtension: "wav") else { return }
+        guard let url = Bundle.main.url(forResource: "bomb", withExtension: "mp3") else { return }
         do {
             popPlayer = try AVAudioPlayer(contentsOf: url)
             popPlayer?.volume = 1.0
@@ -153,7 +186,7 @@ struct ZombieShootingGame: View {
     }
     
     func playMissSound() {
-        guard let url = Bundle.main.url(forResource: "miss", withExtension: "wav") else { return }
+        guard let url = Bundle.main.url(forResource: "damage", withExtension: "mp3") else { return }
         do {
             missPlayer = try AVAudioPlayer(contentsOf: url)
             missPlayer?.volume = 1.0

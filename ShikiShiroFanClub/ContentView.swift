@@ -184,86 +184,19 @@ struct GameButton: View {
         case "どうぶつのなきごえ":
             return AnyView(
                 AnimalSoundGame()
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                HStack {
-                                    Image(systemName: "chevron.left")
-                                    Text("もどる")
-                                }
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Color.blue.opacity(0.8))
-                                .cornerRadius(8)
-                            }
-                        }
-                    }
             )
         case "いろあてクイズ":
             return AnyView(
                 ColorPuzzleGame()
                     .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                HStack {
-                                    Image(systemName: "chevron.left")
-                                    Text("もどる")
-                                }
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Color.blue.opacity(0.8))
-                                .cornerRadius(8)
-                            }
-                        }
-                    }
             )
         case "すうじをかぞえよう":
             return AnyView(
                 NumberGame()
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                HStack {
-                                    Image(systemName: "chevron.left")
-                                    Text("もどる")
-                                }
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Color.blue.opacity(0.8))
-                                .cornerRadius(8)
-                            }
-                        }
-                    }
             )
         case "ゾンビシューティング":
             return AnyView(
                 ZombieShootingGame()
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                HStack {
-                                    Image(systemName: "chevron.left")
-                                    Text("もどる")
-                                }
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Color.blue.opacity(0.8))
-                                .cornerRadius(8)
-                            }
-                        }
-                    }
             )
         default:
             return AnyView(EmptyView())

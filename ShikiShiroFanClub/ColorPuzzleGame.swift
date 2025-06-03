@@ -109,7 +109,23 @@ struct ColorPuzzleGame: View {
                 .transition(.scale)
             }
         }
-        .navigationBarBackButtonHidden(false)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("もどる")
+                    }
+                    .foregroundColor(.white)
+                    .padding(8)
+                    .background(Color.blue.opacity(0.8))
+                    .cornerRadius(8)
+                }
+            }
+        }
         .onAppear {
             setupBGM()
         }

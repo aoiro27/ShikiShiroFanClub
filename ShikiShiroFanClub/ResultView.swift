@@ -27,10 +27,6 @@ struct ResultView: View {
                     .font(.system(size: 24))
                     .foregroundColor(.gray)
             }
-            
-            Text(isCorrect ? "すごいね！" : "つぎはがんばろう！")
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(.blue)
         }
         .padding(30)
         .background(

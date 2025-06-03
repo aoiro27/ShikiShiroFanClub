@@ -31,17 +31,17 @@ struct ZombieShootingGame: View {
     @State private var life = 4
     @State private var heartScale: CGFloat = 1.0
     @Environment(\.dismiss) private var dismiss
+    @State private var screenSize: CGSize = .zero
     
     var body: some View {
-        ZStack {
-            Image("zombie_background")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .ignoresSafeArea()
-            
-            GeometryReader { geometry in
+        GeometryReader { geometry in
+            ZStack {
+                Image("zombie_background")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
+                
                 let safeTop = geometry.safeAreaInsets.top
-                let safeTrailing = geometry.safeAreaInsets.trailing
                 VStack {
                     HStack {
                         HStack(spacing: 8) {
@@ -61,77 +61,77 @@ struct ZombieShootingGame: View {
                     .padding(.horizontal, 1)
                     Spacer()
                 }
-                .frame(width: geometry.size.width, height: geometry.size.height)
-            }
-            
-            // ゾンビたち
-            ForEach(zombies) { zombie in
-                Image(zombie.imageName)
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                    .position(x: zombie.x, y: zombie.y)
-                    .onTapGesture {
-                        popZombie(zombie)
-                    }
-                    .animation(.linear(duration: 0.1), value: zombies)
-            }
-            
-            
-            if isGameOver {
-                VStack(spacing: 20) {
-                    Text("ゲーム終了！")
-                        .font(.system(size: 40, weight: .bold))
+                .onAppear {
+                    screenSize = geometry.size
+                }
+                
+                // ゾンビたち
+                ForEach(zombies) { zombie in
+                    Image(zombie.imageName)
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .position(x: zombie.x, y: zombie.y)
+                        .onTapGesture {
+                            popZombie(zombie)
+                        }
+                        .animation(.linear(duration: 0.1), value: zombies)
+                }
+                
+                if isGameOver {
+                    VStack(spacing: 20) {
+                        Text("ゲーム終了！")
+                            .font(.system(size: 40, weight: .bold))
+                            .foregroundColor(.white)
+                            .shadow(radius: 3)
+                        Text("スコア: \(score)")
+                            .font(.system(size: 32, weight: .bold))
+                            .foregroundColor(.yellow)
+                            .shadow(radius: 2)
+                        Button("もういちど！") {
+                            startGame()
+                        }
+                        .font(.system(size: 28, weight: .bold))
+                        .padding()
+                        .background(Color.green.opacity(0.8))
                         .foregroundColor(.white)
-                        .shadow(radius: 3)
-                    Text("スコア: \(score)")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.yellow)
-                        .shadow(radius: 2)
-                    Button("もういちど！") {
-                        startGame()
+                        .cornerRadius(15)
+                        .shadow(radius: 5)
+                        Button("ホームにもどる") {
+                            dismiss()
+                        }
+                        .font(.system(size: 24, weight: .bold))
+                        .padding()
                     }
-                    .font(.system(size: 28, weight: .bold))
+                    .background(Color.black.opacity(0.7))
+                    .cornerRadius(20)
                     .padding()
-                    .background(Color.green.opacity(0.8))
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-                    .shadow(radius: 5)
-                    Button("ホームにもどる") {
+                }
+            }
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
                         dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                            Text("もどる")
+                        }
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color.blue.opacity(0.8))
+                        .cornerRadius(8)
                     }
-                    .font(.system(size: 24, weight: .bold))
-                    .padding()
-                }
-                .background(Color.black.opacity(0.7))
-                .cornerRadius(20)
-                .padding()
-            }
-            
-        }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                        Text("もどる")
-                    }
-                    .foregroundColor(.white)
-                    .padding(8)
-                    .background(Color.blue.opacity(0.8))
-                    .cornerRadius(8)
                 }
             }
-        }
-        .onAppear {
-            startGame()
-            playBGM()
-        }
-        .onDisappear {
-            timer?.invalidate()
-            bgmPlayer?.stop()
+            .onAppear {
+                startGame()
+                playBGM()
+            }
+            .onDisappear {
+                timer?.invalidate()
+                bgmPlayer?.stop()
+            }
         }
     }
     
@@ -154,7 +154,8 @@ struct ZombieShootingGame: View {
             return z
         }
         // 画面外のゾンビを消す＋ライフ減少
-        let screenHeight = UIScreen.main.bounds.height
+        let screenHeight = screenSize.height
+        let screenWidth = screenSize.width
         let survived = zombies.filter { $0.y <= screenHeight + 100 }
         let passed = zombies.filter { $0.y > screenHeight + 100 }
         if !passed.isEmpty {
@@ -169,11 +170,14 @@ struct ZombieShootingGame: View {
         zombies = survived
         // ランダムで新しいゾンビを追加
         if Int.random(in: 0...20) == 0 {
-            let x = CGFloat.random(in: 80...(UIScreen.main.bounds.width-80))
+            let zombieWidth: CGFloat = 100 // ゾンビの幅
+            let minX = zombieWidth / 2
+            let maxX = screenWidth - zombieWidth / 2
+            let x = CGFloat.random(in: minX...maxX)
             let speed = Double.random(in: 2.0...4.0)
             let images = ["zombie1"] // かわいいゾンビ画像名
             let imageName = images.randomElement() ?? "zombie1"
-            zombies.append(Zombie(x: x, y: -80, speed: speed, imageName: imageName))
+            zombies.append(Zombie(x: x, y: -zombieWidth, speed: speed, imageName: imageName))
         }
     }
     

@@ -28,7 +28,7 @@ struct ZombieShootingGame: View {
     @State private var bgmPlayer: AVAudioPlayer?
     @State private var popPlayer: AVAudioPlayer?
     @State private var missPlayer: AVAudioPlayer?
-    @State private var life = 3
+    @State private var life = 4
     @State private var heartScale: CGFloat = 1.0
     @Environment(\.dismiss) private var dismiss
     
@@ -41,23 +41,27 @@ struct ZombieShootingGame: View {
             
             GeometryReader { geometry in
                 let safeTop = geometry.safeAreaInsets.top
-                HStack {
-                    ForEach(0..<life, id: \.self) { _ in
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.red)
-                            .font(.system(size: 32))
-                            .scaleEffect(heartScale)
-                            .animation(.easeInOut(duration: 0.2), value: heartScale)
+                let safeTrailing = geometry.safeAreaInsets.trailing
+                VStack {
+                    HStack {
+                        HStack(spacing: 8) {
+                            ForEach(0..<life, id: \.self) { _ in
+                                Image(systemName: "heart.fill")
+                                    .foregroundColor(.red)
+                                    .font(.system(size: 32))
+                                    .scaleEffect(heartScale)
+                                    .animation(.easeInOut(duration: 0.2), value: heartScale)
+                            }
+                        }
+                        Text("スコア: \(score)")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.white)
+                            .shadow(radius: 2)
                     }
+                    .padding(.horizontal, 1)
                     Spacer()
-                    Text("スコア: \(score)")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
-                        .shadow(radius: 2)
-                    
                 }
-               // .padding(.horizontal)
-                .padding(.top, safeTop + 8)
+                .frame(width: geometry.size.width, height: geometry.size.height)
             }
             
             // ゾンビたち

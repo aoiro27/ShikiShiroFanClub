@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>おえかきした絵を保存するために写真ライブラリへのアクセスが必要です。</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>おえかきの元になる写真を選択するために写真ライブラリへのアクセスが必要です。</string>
+</dict>
+</plist> 

@@ -31,6 +31,7 @@
 		896F8D9B2DD1050600A641D5 /* ShikiShiroFanClub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShikiShiroFanClub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		896F8DAA2DD1050700A641D5 /* ShikiShiroFanClubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShikiShiroFanClubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		896F8DB42DD1050700A641D5 /* ShikiShiroFanClubUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShikiShiroFanClubUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		896F8D9E2DD1050600A641D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -101,6 +102,15 @@
 				896F8DB42DD1050700A641D5 /* ShikiShiroFanClubUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		896F8D9D2DD1050600A641D5 /* ShikiShiroFanClub */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			children = (
+				896F8D9E2DD1050600A641D5 /* Info.plist */,
+				89D977DB2DD8E68C00298B00 /* Sound */,
+			);
+			path = ShikiShiroFanClub;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -345,6 +355,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				INFOPLIST_FILE = ShikiShiroFanClub/Info.plist;
 			};
 			name = Debug;
 		};
@@ -401,6 +412,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
+				INFOPLIST_FILE = ShikiShiroFanClub/Info.plist;
 			};
 			name = Release;
 		};

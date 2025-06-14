@@ -69,6 +69,15 @@ struct ContentView: View {
                                 playSound(forResource: "ぞんびしゅーてぃんぐ", withExtension: "wav")
                             }
                         )
+                        
+                        GameButton(
+                            title: "おえかきゲーム",
+                            systemImage: "pencil.tip",
+                            onTap: {
+                                audioPlayer?.stop()
+                                playSound(forResource: "おえかき", withExtension: "wav")
+                            }
+                        )
                     }
                     .padding(.top, 20)
                 }
@@ -197,6 +206,10 @@ struct GameButton: View {
         case "ゾンビシューティング":
             return AnyView(
                 ZombieShootingGame()
+            )
+        case "おえかきゲーム":
+            return AnyView(
+                PhotoDrawingGame()
             )
         default:
             return AnyView(EmptyView())

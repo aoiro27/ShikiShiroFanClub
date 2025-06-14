@@ -17,10 +17,12 @@ struct PhotoDrawingGame: View {
                     Image(uiImage: selectedImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxHeight: 400)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all)
                     
                     CanvasView(canvasView: $canvasView, toolPicker: toolPicker)
-                        .frame(maxHeight: 400)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all)
                 }
             } else {
                 Text("写真を選択してください")

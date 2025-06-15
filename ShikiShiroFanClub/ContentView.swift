@@ -10,9 +10,8 @@ import SwiftData
 import AVFoundation
 
 struct ContentView: View {
-    @State private var audioPlayer: AVAudioPlayer?
     @State private var titleSoundPlayer: AVAudioPlayer?
-    @State private var hasPlayedTitleSound = false
+    @State private var isFirstAppearance = true
     
     var body: some View {
         NavigationStack {
@@ -38,7 +37,6 @@ struct ContentView: View {
                             title: "どうぶつのなきごえ",
                             systemImage: "speaker.wave.2.fill",
                             onTap: {
-                                audioPlayer?.stop()
                                 playSound(forResource: "どうぶつのおなまえ", withExtension: "wav")
                             }
                         )
@@ -47,7 +45,6 @@ struct ContentView: View {
                             title: "いろあてクイズ",
                             systemImage: "paintpalette.fill",
                             onTap: {
-                                audioPlayer?.stop()
                                 playSound(forResource: "いろあてくいず", withExtension: "wav")
                             }
                         )
@@ -56,7 +53,6 @@ struct ContentView: View {
                             title: "すうじをかぞえよう",
                             systemImage: "number.circle.fill",
                             onTap: {
-                                audioPlayer?.stop()
                                 playSound(forResource: "すうじをかぞえよう", withExtension: "wav")
                             }
                         )
@@ -65,7 +61,6 @@ struct ContentView: View {
                             title: "ゾンビシューティング",
                             systemImage: "target",
                             onTap: {
-                                audioPlayer?.stop()
                                 playSound(forResource: "ぞんびしゅーてぃんぐ", withExtension: "wav")
                             }
                         )
@@ -74,7 +69,6 @@ struct ContentView: View {
                             title: "おえかきゲーム",
                             systemImage: "pencil.tip",
                             onTap: {
-                                audioPlayer?.stop()
                                 playSound(forResource: "おえかき", withExtension: "wav")
                             }
                         )
@@ -85,11 +79,11 @@ struct ContentView: View {
             }
             .onAppear {
                 setupAudioSession()
-                setupAudio()
-                if !hasPlayedTitleSound {
-                    playTitleSound()
-                    hasPlayedTitleSound = true
+                // 初回起動時以外の場合のみBGMを開始
+                if !isFirstAppearance {
+                    BGMPlayer.shared.playBGM()
                 }
+                isFirstAppearance = false
             }
         }
     }
@@ -118,38 +112,6 @@ struct ContentView: View {
             print("オーディオセッションの設定に失敗しました: \(error.localizedDescription)")
         }
     }
-    
-    private func setupAudio() {
-        guard let url = Bundle.main.url(forResource: "opening", withExtension: "mp3") else {
-            print("BGMファイルが見つかりません")
-            return
-        }
-        
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.numberOfLoops = -1  // 無限ループ
-            audioPlayer?.volume = 0.5  // 音量を50%に設定
-            audioPlayer?.play()
-        } catch {
-            print("BGMの再生に失敗しました: \(error.localizedDescription)")
-        }
-    }
-    
-    private func playTitleSound() {
-        guard let url = Bundle.main.url(forResource: "title", withExtension: "wav") else {
-            print("タイトル音声ファイルが見つかりません")
-            return
-        }
-        
-        do {
-            titleSoundPlayer = try AVAudioPlayer(contentsOf: url)
-            titleSoundPlayer?.volume = 1.0
-            titleSoundPlayer?.play()
-        } catch {
-            print("タイトル音声の再生に失敗しました: \(error.localizedDescription)")
-        }
-    }
 }
 
 struct GameButton: View {
@@ -174,6 +136,8 @@ struct GameButton: View {
         .shadow(radius: 5)
         .onTapGesture {
             onTap?()
+            // BGMを停止
+            BGMPlayer.shared.stopBGM()
             // 効果音の再生が完了するのを待ってから画面遷移
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 isNavigating = true

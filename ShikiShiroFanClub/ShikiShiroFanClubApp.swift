@@ -10,23 +10,19 @@ import SwiftData
 
 @main
 struct ShikiShiroFanClubApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+    @State private var showingOpeningVideo = true
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack {
+                ContentView()
+                
+                if showingOpeningVideo {
+                    VideoPlayerView(isShowing: $showingOpeningVideo)
+                        .transition(.opacity)
+                        .zIndex(1)
+                }
+            }
         }
-        .modelContainer(sharedModelContainer)
     }
 }

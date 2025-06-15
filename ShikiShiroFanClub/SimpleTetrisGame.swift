@@ -18,7 +18,9 @@ struct SimpleTetrisGame: View {
     @State private var dragOffset: CGSize = .zero
     @State private var lastDragPosition: CGPoint?
     @State private var flashOpacity: Double = 0
-    @State private var audioPlayer: AVAudioPlayer?
+    @State private var moveSoundPlayer: AVAudioPlayer?
+    @State private var bottomSoundPlayer: AVAudioPlayer?
+    @State private var bombSoundPlayer: AVAudioPlayer?
     
     // ゲームの設定
     private let gridWidth = 8
@@ -172,6 +174,7 @@ struct SimpleTetrisGame: View {
         let newBlock = Block(color: block.color, x: block.x - 1, y: block.y, shape: block.shape)
         if isValidPosition(block: newBlock) {
             currentBlock = newBlock
+            playMoveSound()
         }
     }
     
@@ -180,6 +183,7 @@ struct SimpleTetrisGame: View {
         let newBlock = Block(color: block.color, x: block.x + 1, y: block.y, shape: block.shape)
         if isValidPosition(block: newBlock) {
             currentBlock = newBlock
+            playMoveSound()
         }
     }
     
@@ -189,10 +193,12 @@ struct SimpleTetrisGame: View {
         
         if isValidPosition(block: newBlock) {
             currentBlock = newBlock
+            playMoveSound()
         } else {
             // ブロックが画面内にある場合のみ配置
             if block.y >= 0 {
                 placeBlock()
+                playBottomSound()
                 checkLines()
             }
             spawnNewBlock()
@@ -288,18 +294,48 @@ struct SimpleTetrisGame: View {
         }
     }
     
-    private func playBombSound() {
-        guard let soundURL = Bundle.main.url(forResource: "mino_bomb", withExtension: "mp3") else {
-            print("Sound file not found")
+    private func playMoveSound() {
+        guard let soundURL = Bundle.main.url(forResource: "mino_move", withExtension: "mp3") else {
+            print("Move sound file not found")
             return
         }
         
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
+            moveSoundPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            moveSoundPlayer?.prepareToPlay()
+            moveSoundPlayer?.play()
         } catch {
-            print("Failed to play sound: \(error.localizedDescription)")
+            print("Failed to play move sound: \(error.localizedDescription)")
+        }
+    }
+    
+    private func playBottomSound() {
+        guard let soundURL = Bundle.main.url(forResource: "mino_bottom", withExtension: "mp3") else {
+            print("Bottom sound file not found")
+            return
+        }
+        
+        do {
+            bottomSoundPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            bottomSoundPlayer?.prepareToPlay()
+            bottomSoundPlayer?.play()
+        } catch {
+            print("Failed to play bottom sound: \(error.localizedDescription)")
+        }
+    }
+    
+    private func playBombSound() {
+        guard let soundURL = Bundle.main.url(forResource: "bomb", withExtension: "mp3") else {
+            print("Bomb sound file not found")
+            return
+        }
+        
+        do {
+            bombSoundPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            bombSoundPlayer?.prepareToPlay()
+            bombSoundPlayer?.play()
+        } catch {
+            print("Failed to play bomb sound: \(error.localizedDescription)")
         }
     }
 }

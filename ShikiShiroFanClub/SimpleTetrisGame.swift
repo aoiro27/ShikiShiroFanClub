@@ -22,6 +22,7 @@ struct SimpleTetrisGame: View {
     @State private var bottomSoundPlayer: AVAudioPlayer?
     @State private var bombSoundPlayer: AVAudioPlayer?
     @State private var bgmPlayer: AVAudioPlayer?
+    @State private var failedSoundPlayer: AVAudioPlayer?
     
     // ゲームの設定
     private let gridWidth = 8
@@ -48,14 +49,17 @@ struct SimpleTetrisGame: View {
     
     var body: some View {
         ZStack {
-            Color.black.opacity(0.9)
+            // 背景画像
+            Image("tetris_background")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
             
             VStack(spacing: 20) {
                 // スコア表示
                 Text("スコア: \(score)")
                     .font(.system(size: 40, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
                     .padding(.top, 20)
                 
                 // ゲームグリッド
@@ -149,6 +153,7 @@ struct SimpleTetrisGame: View {
             Button("もう一度") {
                 resetGame()
                 startGame()
+                startBGM()
             }
             Button("もどる") {
                 dismiss()
@@ -230,6 +235,8 @@ struct SimpleTetrisGame: View {
             isGameOver = true
             gameTimer?.invalidate()
             gameTimer = nil
+            stopBGM()  // BGMを停止
+            playFailedSound()
             return
         }
     }
@@ -402,6 +409,21 @@ struct SimpleTetrisGame: View {
             bombSoundPlayer?.play()
         } catch {
             print("Failed to play bomb sound: \(error.localizedDescription)")
+        }
+    }
+    
+    private func playFailedSound() {
+        guard let soundURL = Bundle.main.url(forResource: "mino_failed", withExtension: "mp3") else {
+            print("Failed sound file not found")
+            return
+        }
+        
+        do {
+            failedSoundPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            failedSoundPlayer?.prepareToPlay()
+            failedSoundPlayer?.play()
+        } catch {
+            print("Failed to play failed sound: \(error.localizedDescription)")
         }
     }
 }

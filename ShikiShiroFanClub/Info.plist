@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>しきしろあぷり</string>
+	<string>しきしろふぁんくらぶ</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>おえかきした絵を保存するために写真ライブラリへのアクセスが必要です。</string>
 	<key>NSPhotoLibraryUsageDescription</key>

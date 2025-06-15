@@ -55,12 +55,8 @@ struct SimpleTetrisGame: View {
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
             
-            VStack(spacing: 20) {
-                // スコア表示
-                Text("スコア: \(score)")
-                    .font(.system(size: 40, weight: .bold))
-                    .foregroundColor(.blue)
-                    .padding(.top, 20)
+            HStack {
+                Spacer()
                 
                 // ゲームグリッド
                 ZStack {
@@ -137,8 +133,21 @@ struct SimpleTetrisGame: View {
                         }
                 )
                 
+                // スコア表示
+                VStack {
+                    Text("スコア")
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundColor(.blue)
+                    
+                    Text("\(score)")
+                        .font(.system(size: 40, weight: .bold))
+                        .foregroundColor(.blue)
+                }
+                .padding(.leading, 40)
+                
                 Spacer()
             }
+            .padding(.top, 20)
         }
         .onAppear {
             startGame()
@@ -341,7 +350,7 @@ struct SimpleTetrisGame: View {
         
         // スコア加算
         if linesCleared > 0 {
-            score += linesCleared * 100
+            score += linesCleared
             
             // フラッシュエフェクトを表示
             withAnimation(.easeInOut(duration: 0.1)) {

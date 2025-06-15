@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 struct Block {
     let color: Color
@@ -17,6 +18,7 @@ struct SimpleTetrisGame: View {
     @State private var dragOffset: CGSize = .zero
     @State private var lastDragPosition: CGPoint?
     @State private var flashOpacity: Double = 0
+    @State private var audioPlayer: AVAudioPlayer?
     
     // ゲームの設定
     private let gridWidth = 8
@@ -268,6 +270,9 @@ struct SimpleTetrisGame: View {
                 flashOpacity = 0.7
             }
             
+            // 効果音を再生
+            playBombSound()
+            
             // 0.2秒後にフラッシュを消す
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.easeInOut(duration: 0.1)) {
@@ -280,6 +285,21 @@ struct SimpleTetrisGame: View {
         if grid[0].contains(where: { $0 != .clear }) {
             isGameOver = true
             gameTimer?.invalidate()
+        }
+    }
+    
+    private func playBombSound() {
+        guard let soundURL = Bundle.main.url(forResource: "mino_bomb", withExtension: "mp3") else {
+            print("Sound file not found")
+            return
+        }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+        } catch {
+            print("Failed to play sound: \(error.localizedDescription)")
         }
     }
 }

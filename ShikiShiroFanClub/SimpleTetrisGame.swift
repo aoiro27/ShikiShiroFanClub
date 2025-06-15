@@ -11,9 +11,9 @@ struct SimpleTetrisGame: View {
     @State private var lastDragPosition: CGPoint?
     
     // ゲームの設定
-    private let gridWidth = 10
-    private let gridHeight = 20
-    private let blockSize: CGFloat = 30
+    private let gridWidth = 8
+    private let gridHeight = 14
+    private let blockSize: CGFloat = 45
     private let fallInterval: TimeInterval = 1.0
     
     var body: some View {
@@ -21,12 +21,12 @@ struct SimpleTetrisGame: View {
             Color.black.opacity(0.9)
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 15) {
                 // スコア表示
                 Text("スコア: \(score)")
-                    .font(.title)
+                    .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
-                    .padding()
+                    .padding(.top, 15)
                 
                 // ゲームグリッド
                 ZStack {
@@ -95,43 +95,8 @@ struct SimpleTetrisGame: View {
                             dragOffset = .zero
                         }
                 )
-                .padding()
                 
-                // 操作ボタン（バックアップとして残しておく）
-                HStack(spacing: 50) {
-                    Button(action: moveLeft) {
-                        Image(systemName: "arrow.left.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(.white)
-                    }
-                    
-                    Button(action: moveRight) {
-                        Image(systemName: "arrow.right.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(.white)
-                    }
-                    
-                    Button(action: moveDown) {
-                        Image(systemName: "arrow.down.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(.white)
-                    }
-                }
-                .padding()
-                
-                // 戻るボタン
-                Button(action: {
-                    gameTimer?.invalidate()
-                    dismiss()
-                }) {
-                    Text("もどる")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .padding()
+                Spacer()
             }
         }
         .onAppear {

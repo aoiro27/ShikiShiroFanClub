@@ -20,8 +20,8 @@ struct SimpleTetrisGame: View {
     
     // ゲームの設定
     private let gridWidth = 8
-    private let gridHeight = 14
-    private let blockSize: CGFloat = 45
+    private let gridHeight = 12
+    private let blockSize: CGFloat = 50
     private let fallInterval: TimeInterval = 1.0
     
     // テトリミノの形状定義
@@ -41,12 +41,12 @@ struct SimpleTetrisGame: View {
             Color.black.opacity(0.9)
                 .ignoresSafeArea()
             
-            VStack(spacing: 15) {
+            VStack(spacing: 20) {
                 // スコア表示
                 Text("スコア: \(score)")
-                    .font(.system(size: 36, weight: .bold))
+                    .font(.system(size: 40, weight: .bold))
                     .foregroundColor(.white)
-                    .padding(.top, 15)
+                    .padding(.top, 20)
                 
                 // ゲームグリッド
                 ZStack {

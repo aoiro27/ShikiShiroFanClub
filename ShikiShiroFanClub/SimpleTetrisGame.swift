@@ -21,6 +21,7 @@ struct SimpleTetrisGame: View {
     @State private var moveSoundPlayer: AVAudioPlayer?
     @State private var bottomSoundPlayer: AVAudioPlayer?
     @State private var bombSoundPlayer: AVAudioPlayer?
+    @State private var bgmPlayer: AVAudioPlayer?
     
     // ゲームの設定
     private let gridWidth = 8
@@ -29,15 +30,20 @@ struct SimpleTetrisGame: View {
     private let fallInterval: TimeInterval = 1.0
     
     // テトリミノの形状定義
-    private let tetrominoShapes: [(shape: [[Bool]], color: Color)] = [
+    private let tetrominoShapes: [[[Bool]]] = [
         // I型（縦棒）
-        ([[true],
-          [true],
-          [true],
-          [true]], .cyan),
+        [[true],
+         [true],
+         [true],
+         [true]],
         // 2x2のブロック
-        ([[true, true],
-          [true, true]], .yellow)
+        [[true, true],
+         [true, true]]
+    ]
+    
+    // 使用可能な色のリスト
+    private let availableColors: [Color] = [
+        .red, .blue, .green, .yellow, .purple, .orange, .pink, .cyan
     ]
     
     var body: some View {
@@ -132,10 +138,17 @@ struct SimpleTetrisGame: View {
         }
         .onAppear {
             startGame()
+            startBGM()
+        }
+        .onDisappear {
+            stopBGM()
+            gameTimer?.invalidate()
+            gameTimer = nil
         }
         .alert("ゲームオーバー", isPresented: $isGameOver) {
             Button("もう一度") {
                 resetGame()
+                startGame()
             }
             Button("もどる") {
                 dismiss()
@@ -145,28 +158,80 @@ struct SimpleTetrisGame: View {
         }
     }
     
+    private func startBGM() {
+        guard let soundURL = Bundle.main.url(forResource: "mino_bgm", withExtension: "mp3") else {
+            print("BGM file not found")
+            return
+        }
+        
+        do {
+            bgmPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            bgmPlayer?.numberOfLoops = -1  // 無限ループ
+            bgmPlayer?.volume = 0.5  // 音量を50%に設定
+            bgmPlayer?.prepareToPlay()
+            bgmPlayer?.play()
+        } catch {
+            print("Failed to play BGM: \(error.localizedDescription)")
+        }
+    }
+    
+    private func stopBGM() {
+        bgmPlayer?.stop()
+        bgmPlayer = nil
+    }
+    
     private func startGame() {
+        // 既存のタイマーを停止
+        gameTimer?.invalidate()
+        gameTimer = nil
+        
+        // ゲームの初期化
         resetGame()
-        gameTimer = Timer.scheduledTimer(withTimeInterval: fallInterval, repeats: true) { _ in
-            moveDown()
+        
+        // タイマーをメインスレッドで実行
+        DispatchQueue.main.async {
+            self.gameTimer = Timer.scheduledTimer(withTimeInterval: self.fallInterval, repeats: true) { _ in
+                self.moveDown()
+            }
+            // タイマーをRunLoopに追加
+            RunLoop.current.add(self.gameTimer!, forMode: .common)
         }
     }
     
     private func resetGame() {
+        // グリッドの初期化
         grid = Array(repeating: Array(repeating: .clear, count: gridWidth), count: gridHeight)
         score = 0
         isGameOver = false
-        spawnNewBlock()
+        currentBlock = nil  // 現在のブロックをクリア
+        
+        // 最初のブロックを生成
+        DispatchQueue.main.async {
+            self.spawnNewBlock()
+        }
     }
     
     private func spawnNewBlock() {
-        let randomTetromino = tetrominoShapes.randomElement()!
-        let shape = randomTetromino.shape
-        let color = randomTetromino.color
+        let randomShape = tetrominoShapes.randomElement()!
+        let randomColor = availableColors.randomElement()!
         
         // ブロックの初期位置を中央に設定
-        let startX = (gridWidth - shape[0].count) / 2
-        currentBlock = Block(color: color, x: startX, y: -shape.count, shape: shape)
+        let startX = (gridWidth - randomShape[0].count) / 2
+        let startY = 0  // 最上段から開始
+        
+        print("Spawning new block at x: \(startX), y: \(startY)")
+        print("Shape size: \(randomShape.count) rows, \(randomShape[0].count) columns")
+        
+        currentBlock = Block(color: randomColor, x: startX, y: startY, shape: randomShape)
+        
+        // 新しいブロックが配置できない場合はゲームオーバー
+        if !isValidPosition(block: currentBlock!) {
+            print("Invalid position detected - Game Over")
+            isGameOver = true
+            gameTimer?.invalidate()
+            gameTimer = nil
+            return
+        }
     }
     
     private func moveLeft() {
@@ -202,34 +267,34 @@ struct SimpleTetrisGame: View {
                 checkLines()
             }
             spawnNewBlock()
-            
-            // 新しいブロックが配置できない場合はゲームオーバー
-            if !isValidPosition(block: currentBlock!) {
-                isGameOver = true
-                gameTimer?.invalidate()
-            }
         }
     }
     
     private func isValidPosition(block: Block) -> Bool {
+        // ブロックの各セルをチェック
         for y in 0..<block.shape.count {
             for x in 0..<block.shape[y].count {
                 if block.shape[y][x] {
                     let gridX = block.x + x
                     let gridY = block.y + y
                     
-                    // グリッドの範囲外チェック
+                    print("Checking position: x: \(gridX), y: \(gridY)")
+                    
+                    // グリッドの範囲外チェック（左右）
                     if gridX < 0 || gridX >= gridWidth {
+                        print("Invalid: Out of bounds horizontally")
                         return false
                     }
                     
                     // 下端チェック
                     if gridY >= gridHeight {
+                        print("Invalid: Out of bounds vertically (bottom)")
                         return false
                     }
                     
-                    // 既存のブロックとの衝突チェック（画面内の場合のみ）
+                    // 既存のブロックとの衝突チェック
                     if gridY >= 0 && grid[gridY][gridX] != .clear {
+                        print("Invalid: Collision with existing block")
                         return false
                     }
                 }
@@ -291,6 +356,7 @@ struct SimpleTetrisGame: View {
         if grid[0].contains(where: { $0 != .clear }) {
             isGameOver = true
             gameTimer?.invalidate()
+            gameTimer = nil
         }
     }
     

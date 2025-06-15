@@ -7,6 +7,8 @@ struct SimpleTetrisGame: View {
     @State private var gameTimer: Timer?
     @State private var score: Int = 0
     @State private var isGameOver = false
+    @State private var dragOffset: CGSize = .zero
+    @State private var lastDragPosition: CGPoint?
     
     // ゲームの設定
     private let gridWidth = 10
@@ -52,8 +54,8 @@ struct SimpleTetrisGame: View {
                                     .frame(width: blockSize, height: blockSize)
                                     .border(Color.gray, width: 0.5)
                                     .position(
-                                        x: CGFloat(block.x + x) * (blockSize + 1) + blockSize / 2,
-                                        y: CGFloat(block.y + y) * (blockSize + 1) + blockSize / 2
+                                        x: CGFloat(block.x + x) * (blockSize + 1) + blockSize / 2 + dragOffset.width,
+                                        y: CGFloat(block.y + y) * (blockSize + 1) + blockSize / 2 + dragOffset.height
                                     )
                             }
                         }
@@ -61,9 +63,41 @@ struct SimpleTetrisGame: View {
                 }
                 .frame(width: CGFloat(gridWidth) * (blockSize + 1),
                        height: CGFloat(gridHeight) * (blockSize + 1))
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            if lastDragPosition == nil {
+                                lastDragPosition = gesture.location
+                                return
+                            }
+                            
+                            let dx = gesture.location.x - lastDragPosition!.x
+                            let dy = gesture.location.y - lastDragPosition!.y
+                            
+                            // 水平方向の移動（左右）
+                            if abs(dx) > blockSize / 2 {
+                                if dx > 0 {
+                                    moveRight()
+                                } else {
+                                    moveLeft()
+                                }
+                                lastDragPosition = gesture.location
+                            }
+                            
+                            // 垂直方向の移動（下）
+                            if dy > blockSize / 2 {
+                                moveDown()
+                                lastDragPosition = gesture.location
+                            }
+                        }
+                        .onEnded { _ in
+                            lastDragPosition = nil
+                            dragOffset = .zero
+                        }
+                )
                 .padding()
                 
-                // 操作ボタン
+                // 操作ボタン（バックアップとして残しておく）
                 HStack(spacing: 50) {
                     Button(action: moveLeft) {
                         Image(systemName: "arrow.left.circle.fill")

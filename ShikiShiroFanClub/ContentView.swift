@@ -72,6 +72,14 @@ struct ContentView: View {
                                 playSound(forResource: "おえかき", withExtension: "wav")
                             }
                         )
+                        
+                        GameButton(
+                            title: "テトリス",
+                            systemImage: "square.grid.3x3.fill",
+                            onTap: {
+                                playSound(forResource: "テトリス", withExtension: "wav")
+                            }
+                        )
                     }
                     .padding(.top, 20)
                 }
@@ -174,6 +182,10 @@ struct GameButton: View {
         case "おえかきゲーム":
             return AnyView(
                 PhotoDrawingGame()
+            )
+        case "テトリス":
+            return AnyView(
+                SimpleTetrisGame()
             )
         default:
             return AnyView(EmptyView())

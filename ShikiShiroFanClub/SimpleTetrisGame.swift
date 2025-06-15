@@ -1,5 +1,12 @@
 import SwiftUI
 
+struct Block {
+    let color: Color
+    var x: Int
+    var y: Int
+    var shape: [[Bool]]
+}
+
 struct SimpleTetrisGame: View {
     @Environment(\.dismiss) private var dismiss
     @State private var grid: [[Color]] = Array(repeating: Array(repeating: .clear, count: 10), count: 20)
@@ -15,6 +22,18 @@ struct SimpleTetrisGame: View {
     private let gridHeight = 14
     private let blockSize: CGFloat = 45
     private let fallInterval: TimeInterval = 1.0
+    
+    // テトリミノの形状定義
+    private let tetrominoShapes: [(shape: [[Bool]], color: Color)] = [
+        // I型（縦棒）
+        ([[true],
+          [true],
+          [true],
+          [true]], .cyan),
+        // 2x2のブロック
+        ([[true, true],
+          [true, true]], .yellow)
+    ]
     
     var body: some View {
         ZStack {
@@ -47,16 +66,18 @@ struct SimpleTetrisGame: View {
                     
                     // 落下中のブロック
                     if let block = currentBlock {
-                        ForEach(0..<2) { y in
-                            ForEach(0..<2) { x in
-                                Rectangle()
-                                    .fill(block.color)
-                                    .frame(width: blockSize, height: blockSize)
-                                    .border(Color.gray, width: 0.5)
-                                    .position(
-                                        x: CGFloat(block.x + x) * (blockSize + 1) + blockSize / 2 + dragOffset.width,
-                                        y: CGFloat(block.y + y) * (blockSize + 1) + blockSize / 2 + dragOffset.height
-                                    )
+                        ForEach(0..<block.shape.count, id: \.self) { y in
+                            ForEach(0..<block.shape[y].count, id: \.self) { x in
+                                if block.shape[y][x] {
+                                    Rectangle()
+                                        .fill(block.color)
+                                        .frame(width: blockSize, height: blockSize)
+                                        .border(Color.gray, width: 0.5)
+                                        .position(
+                                            x: CGFloat(block.x + x) * (blockSize + 1) + blockSize / 2 + dragOffset.width,
+                                            y: CGFloat(block.y + y) * (blockSize + 1) + blockSize / 2 + dragOffset.height
+                                        )
+                                }
                             }
                         }
                     }
@@ -129,14 +150,18 @@ struct SimpleTetrisGame: View {
     }
     
     private func spawnNewBlock() {
-        let colors: [Color] = [.red, .blue, .green, .yellow, .purple, .orange]
-        let randomColor = colors.randomElement() ?? .red
-        currentBlock = Block(color: randomColor, x: gridWidth / 2 - 1, y: -2)
+        let randomTetromino = tetrominoShapes.randomElement()!
+        let shape = randomTetromino.shape
+        let color = randomTetromino.color
+        
+        // ブロックの初期位置を中央に設定
+        let startX = (gridWidth - shape[0].count) / 2
+        currentBlock = Block(color: color, x: startX, y: -shape.count, shape: shape)
     }
     
     private func moveLeft() {
         guard let block = currentBlock else { return }
-        let newBlock = Block(color: block.color, x: block.x - 1, y: block.y)
+        let newBlock = Block(color: block.color, x: block.x - 1, y: block.y, shape: block.shape)
         if isValidPosition(block: newBlock) {
             currentBlock = newBlock
         }
@@ -144,7 +169,7 @@ struct SimpleTetrisGame: View {
     
     private func moveRight() {
         guard let block = currentBlock else { return }
-        let newBlock = Block(color: block.color, x: block.x + 1, y: block.y)
+        let newBlock = Block(color: block.color, x: block.x + 1, y: block.y, shape: block.shape)
         if isValidPosition(block: newBlock) {
             currentBlock = newBlock
         }
@@ -152,7 +177,7 @@ struct SimpleTetrisGame: View {
     
     private func moveDown() {
         guard let block = currentBlock else { return }
-        let newBlock = Block(color: block.color, x: block.x, y: block.y + 1)
+        let newBlock = Block(color: block.color, x: block.x, y: block.y + 1, shape: block.shape)
         
         if isValidPosition(block: newBlock) {
             currentBlock = newBlock
@@ -173,25 +198,26 @@ struct SimpleTetrisGame: View {
     }
     
     private func isValidPosition(block: Block) -> Bool {
-        // 2x2のブロックの位置チェック
-        for y in 0..<2 {
-            for x in 0..<2 {
-                let gridX = block.x + x
-                let gridY = block.y + y
-                
-                // グリッドの範囲外チェック
-                if gridX < 0 || gridX >= gridWidth {
-                    return false
-                }
-                
-                // 下端チェック
-                if gridY >= gridHeight {
-                    return false
-                }
-                
-                // 既存のブロックとの衝突チェック（画面内の場合のみ）
-                if gridY >= 0 && grid[gridY][gridX] != .clear {
-                    return false
+        for y in 0..<block.shape.count {
+            for x in 0..<block.shape[y].count {
+                if block.shape[y][x] {
+                    let gridX = block.x + x
+                    let gridY = block.y + y
+                    
+                    // グリッドの範囲外チェック
+                    if gridX < 0 || gridX >= gridWidth {
+                        return false
+                    }
+                    
+                    // 下端チェック
+                    if gridY >= gridHeight {
+                        return false
+                    }
+                    
+                    // 既存のブロックとの衝突チェック（画面内の場合のみ）
+                    if gridY >= 0 && grid[gridY][gridX] != .clear {
+                        return false
+                    }
                 }
             }
         }
@@ -201,13 +227,14 @@ struct SimpleTetrisGame: View {
     private func placeBlock() {
         guard let block = currentBlock else { return }
         
-        // 2x2のブロックを配置
-        for y in 0..<2 {
-            for x in 0..<2 {
-                let gridX = block.x + x
-                let gridY = block.y + y
-                if gridY >= 0 && gridY < gridHeight && gridX >= 0 && gridX < gridWidth {
-                    grid[gridY][gridX] = block.color
+        for y in 0..<block.shape.count {
+            for x in 0..<block.shape[y].count {
+                if block.shape[y][x] {
+                    let gridX = block.x + x
+                    let gridY = block.y + y
+                    if gridY >= 0 && gridY < gridHeight && gridX >= 0 && gridX < gridWidth {
+                        grid[gridY][gridX] = block.color
+                    }
                 }
             }
         }
@@ -237,12 +264,6 @@ struct SimpleTetrisGame: View {
             gameTimer?.invalidate()
         }
     }
-}
-
-struct Block {
-    let color: Color
-    var x: Int
-    var y: Int
 }
 
 struct SimpleTetrisGame_Previews: PreviewProvider {

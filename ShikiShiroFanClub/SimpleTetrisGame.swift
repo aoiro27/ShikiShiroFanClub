@@ -16,6 +16,7 @@ struct SimpleTetrisGame: View {
     @State private var isGameOver = false
     @State private var dragOffset: CGSize = .zero
     @State private var lastDragPosition: CGPoint?
+    @State private var flashOpacity: Double = 0
     
     // ゲームの設定
     private let gridWidth = 8
@@ -84,6 +85,11 @@ struct SimpleTetrisGame: View {
                 }
                 .frame(width: CGFloat(gridWidth) * (blockSize + 1),
                        height: CGFloat(gridHeight) * (blockSize + 1))
+                .overlay(
+                    Rectangle()
+                        .fill(Color.white)
+                        .opacity(flashOpacity)
+                )
                 .gesture(
                     DragGesture()
                         .onChanged { gesture in
@@ -256,6 +262,18 @@ struct SimpleTetrisGame: View {
         // スコア加算
         if linesCleared > 0 {
             score += linesCleared * 100
+            
+            // フラッシュエフェクトを表示
+            withAnimation(.easeInOut(duration: 0.1)) {
+                flashOpacity = 0.7
+            }
+            
+            // 0.2秒後にフラッシュを消す
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                withAnimation(.easeInOut(duration: 0.1)) {
+                    flashOpacity = 0
+                }
+            }
         }
         
         // 最上段にブロックがあるかチェック

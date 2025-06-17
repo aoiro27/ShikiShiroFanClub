@@ -34,7 +34,7 @@ struct ContentView: View {
                     
                     VStack(spacing: 20) {
                         GameButton(
-                            title: "どうぶつのなきごえ",
+                            title: "どうぶつのおなまえ",
                             systemImage: "speaker.wave.2.fill",
                             onTap: {
                                 playSound(forResource: "どうぶつのおなまえ", withExtension: "wav")
@@ -130,19 +130,7 @@ struct GameButton: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        HStack {
-            Image(systemName: systemImage)
-                .font(.system(size: 24))
-            Text(title)
-                .font(.system(size: 20, weight: .bold))
-        }
-        .foregroundColor(.white)
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color.blue.opacity(0.8))
-        .cornerRadius(15)
-        .shadow(radius: 5)
-        .onTapGesture {
+        Button(action: {
             onTap?()
             // BGMを停止
             BGMPlayer.shared.stopBGM()
@@ -150,7 +138,36 @@ struct GameButton: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 isNavigating = true
             }
+        }) {
+            HStack(spacing: 20) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .shadow(radius: 2)
+                Text(title)
+                    .font(.system(size: 32, weight: .heavy, design: .rounded))
+                    .foregroundColor(.white)
+                    .shadow(radius: 2)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            .frame(maxWidth: .infinity, minHeight: 80)
+            .padding(.horizontal, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 32, style: .continuous)
+                    .fill(LinearGradient(
+                        gradient: Gradient(colors: [Color.blue.opacity(0.85), Color.cyan.opacity(0.85)]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 32, style: .continuous)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 3)
+            )
+            .shadow(color: Color.cyan.opacity(0.3), radius: 10, x: 0, y: 6)
         }
+        .buttonStyle(PlainButtonStyle())
         .background(
             NavigationLink(
                 destination: destination,
@@ -158,18 +175,18 @@ struct GameButton: View {
                 label: { EmptyView() }
             )
         )
+        .padding(.horizontal, 8)
     }
     
     var destination: some View {
         switch title {
-        case "どうぶつのなきごえ":
+        case "どうぶつのおなまえ":
             return AnyView(
                 AnimalSoundGame()
             )
         case "いろあてクイズ":
             return AnyView(
                 ColorPuzzleGame()
-                    .navigationBarBackButtonHidden(true)
             )
         case "すうじをかぞえよう":
             return AnyView(

@@ -48,106 +48,113 @@ struct SimpleTetrisGame: View {
     ]
     
     var body: some View {
-        ZStack {
-            // 背景画像
-            Image("tetris_background")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .ignoresSafeArea()
-            
-            HStack {
-                Spacer()
+        GeometryReader { geometry in
+            ZStack {
+                // 背景画像
+                Image("tetris_background")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
                 
-                // ゲームグリッド
-                ZStack {
-                    // 固定されたブロック
-                    VStack(spacing: 1) {
-                        ForEach(0..<gridHeight, id: \.self) { row in
-                            HStack(spacing: 1) {
-                                ForEach(0..<gridWidth, id: \.self) { column in
-                                    Rectangle()
-                                        .fill(grid[row][column])
-                                        .frame(width: blockSize, height: blockSize)
-                                        .border(Color.gray, width: 0.5)
+                // 横並びで中央寄せ
+                HStack(alignment: .center, spacing: 0) {
+                    Spacer(minLength: 0)
+                    // ゲームグリッド
+                    let scoreAreaWidth: CGFloat = 140
+                    let gridW = CGFloat(gridWidth)
+                    let gridH = CGFloat(gridHeight)
+                    let maxBlockW = (geometry.size.width - scoreAreaWidth - 32) / gridW
+                    let maxBlockH = (geometry.size.height - 32) / gridH
+                    let dynamicBlockSize = min(maxBlockW, maxBlockH)
+                    ZStack {
+                        // 固定されたブロック
+                        VStack(spacing: 1) {
+                            ForEach(0..<gridHeight, id: \.self) { row in
+                                HStack(spacing: 1) {
+                                    ForEach(0..<gridWidth, id: \.self) { column in
+                                        Rectangle()
+                                            .fill(grid[row][column])
+                                            .frame(width: dynamicBlockSize, height: dynamicBlockSize)
+                                            .border(Color.gray, width: 0.5)
+                                    }
+                                }
+                            }
+                        }
+                        .background(Color.black)
+                        
+                        // 落下中のブロック
+                        if let block = currentBlock {
+                            ForEach(0..<block.shape.count, id: \.self) { y in
+                                ForEach(0..<block.shape[y].count, id: \.self) { x in
+                                    if block.shape[y][x] {
+                                        Rectangle()
+                                            .fill(block.color)
+                                            .frame(width: dynamicBlockSize, height: dynamicBlockSize)
+                                            .border(Color.gray, width: 0.5)
+                                            .position(
+                                                x: CGFloat(block.x + x) * (dynamicBlockSize + 1) + dynamicBlockSize / 2 + dragOffset.width,
+                                                y: CGFloat(block.y + y) * (dynamicBlockSize + 1) + dynamicBlockSize / 2 + dragOffset.height
+                                            )
+                                    }
                                 }
                             }
                         }
                     }
-                    .background(Color.black)
-                    
-                    // 落下中のブロック
-                    if let block = currentBlock {
-                        ForEach(0..<block.shape.count, id: \.self) { y in
-                            ForEach(0..<block.shape[y].count, id: \.self) { x in
-                                if block.shape[y][x] {
-                                    Rectangle()
-                                        .fill(block.color)
-                                        .frame(width: blockSize, height: blockSize)
-                                        .border(Color.gray, width: 0.5)
-                                        .position(
-                                            x: CGFloat(block.x + x) * (blockSize + 1) + blockSize / 2 + dragOffset.width,
-                                            y: CGFloat(block.y + y) * (blockSize + 1) + blockSize / 2 + dragOffset.height
-                                        )
+                    .frame(width: gridW * (dynamicBlockSize + 1),
+                           height: gridH * (dynamicBlockSize + 1))
+                    .overlay(
+                        Rectangle()
+                            .fill(Color.white)
+                            .opacity(flashOpacity)
+                    )
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                if lastDragPosition == nil {
+                                    lastDragPosition = gesture.location
+                                    return
+                                }
+                                
+                                let dx = gesture.location.x - lastDragPosition!.x
+                                let dy = gesture.location.y - lastDragPosition!.y
+                                
+                                // 水平方向の移動（左右）
+                                if abs(dx) > dynamicBlockSize / 2 {
+                                    if dx > 0 {
+                                        moveRight()
+                                    } else {
+                                        moveLeft()
+                                    }
+                                    lastDragPosition = gesture.location
+                                }
+                                
+                                // 垂直方向の移動（下）
+                                if dy > dynamicBlockSize / 2 {
+                                    moveDown()
+                                    lastDragPosition = gesture.location
                                 }
                             }
-                        }
+                            .onEnded { _ in
+                                lastDragPosition = nil
+                                dragOffset = .zero
+                            }
+                    )
+                    // スコア表示
+                    VStack(spacing: 24) {
+                        Text("スコア")
+                            .font(.system(size: 32, weight: .bold))
+                            .foregroundColor(.blue)
+                        Text("\(score)")
+                            .font(.system(size: 56, weight: .heavy))
+                            .foregroundColor(.blue)
+                            .minimumScaleFactor(0.5)
                     }
+                    .frame(width: scoreAreaWidth)
+                    .padding(.leading, 16)
+                    Spacer(minLength: 0)
                 }
-                .frame(width: CGFloat(gridWidth) * (blockSize + 1),
-                       height: CGFloat(gridHeight) * (blockSize + 1))
-                .overlay(
-                    Rectangle()
-                        .fill(Color.white)
-                        .opacity(flashOpacity)
-                )
-                .gesture(
-                    DragGesture()
-                        .onChanged { gesture in
-                            if lastDragPosition == nil {
-                                lastDragPosition = gesture.location
-                                return
-                            }
-                            
-                            let dx = gesture.location.x - lastDragPosition!.x
-                            let dy = gesture.location.y - lastDragPosition!.y
-                            
-                            // 水平方向の移動（左右）
-                            if abs(dx) > blockSize / 2 {
-                                if dx > 0 {
-                                    moveRight()
-                                } else {
-                                    moveLeft()
-                                }
-                                lastDragPosition = gesture.location
-                            }
-                            
-                            // 垂直方向の移動（下）
-                            if dy > blockSize / 2 {
-                                moveDown()
-                                lastDragPosition = gesture.location
-                            }
-                        }
-                        .onEnded { _ in
-                            lastDragPosition = nil
-                            dragOffset = .zero
-                        }
-                )
-                
-                // スコア表示
-                VStack {
-                    Text("スコア")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundColor(.blue)
-                    
-                    Text("\(score)")
-                        .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.blue)
-                }
-                .padding(.leading, 40)
-                
-                Spacer()
+                .frame(width: geometry.size.width, height: geometry.size.height)
             }
-            .padding(.top, 20)
         }
         .onAppear {
             startGame()
